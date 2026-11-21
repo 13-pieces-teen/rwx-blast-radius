@@ -1,7 +1,7 @@
 """Observe class namespace consumption without replacing namespace objects.
 
-Only the built-in mappingproxy.get operation has key-specific semantics here.
-Every other namespace access remains opaque, including iteration and aliases.
+Built-in mappingproxy.get reads one value; exact-string membership reads keys
+only. Every other namespace access stays opaque, including iteration and aliases.
 """
 import ast
 import importlib.abc
@@ -31,7 +31,28 @@ def ordinary_class_namespace(obj):
             and slots.get("__getattribute__") is type.__getattribute__)
 
 
+def ordinary_namespace_keys(namespace):
+    """Even an exact-str query can call a stored str subclass's __eq__."""
+    try:
+        return all(type(key) is str for key in namespace)
+    except RuntimeError:
+        # Concurrent writes during iteration must not change program behavior.
+        return False
+
+
 class NamespaceObserver(ast.NodeTransformer):
+    def visit_Compare(self, node):
+        # Do not split chained comparisons: their intermediate value, evaluation
+        # count and short-circuit behavior must stay exactly as Python defines.
+        if len(node.ops) == 1 and isinstance(node.ops[0], (ast.In, ast.NotIn)):
+            namespace = node.comparators[0]
+            if isinstance(namespace, ast.Attribute) and namespace.attr == "__dict__":
+                return ast.copy_location(ast.Call(
+                    func=ast.Name(id="__rwx_namespace_contains__", ctx=ast.Load()),
+                    args=[self.visit(node.left), self.visit(namespace.value),
+                          ast.Constant(value=isinstance(node.ops[0], ast.NotIn))], keywords=[]), node)
+        return self.generic_visit(node)
+
     def visit_Attribute(self, node):
         self.generic_visit(node)
         if isinstance(node.ctx, ast.Load) and node.attr == "__dict__":
@@ -72,11 +93,27 @@ def helpers(record):
             return method
 
         def get(*args, **kwargs):
-            key = args[0] if args and type(args[0]) is str and not kwargs else None
+            # The mappingproxy is live. Argument evaluation can have inserted
+            # custom keys after get_method captured the original bound method.
+            key = (args[0] if args and type(args[0]) is str and not kwargs
+                   and ordinary_namespace_keys(namespace) else None)
             record(obj, key)
             return method(*args, **kwargs)
 
         return get
+
+    def contains(key, obj, negative):
+        # Arguments preserve key -> receiver evaluation, then fetch __dict__.
+        # Only a normal class namespace is independent of its attribute values;
+        # metaclasses may synthesize a namespace from arbitrary derived state.
+        namespace = obj.__dict__
+        if (type(key) is str and type(namespace) is types.MappingProxyType
+                and ordinary_class_namespace(obj) and ordinary_namespace_keys(namespace)):
+            record(obj, None, "keys")
+        else:
+            record(obj, None)
+        present = key in namespace
+        return not present if negative else present
 
     def dynamic(function, *values, **kwargs):
         value = function(*values, **kwargs)
@@ -87,7 +124,7 @@ def helpers(record):
         return value
 
     return {"__rwx_namespace_read__": read, "__rwx_namespace_get__": get_method,
-            "__rwx_namespace_dynamic__": dynamic}
+            "__rwx_namespace_dynamic__": dynamic, "__rwx_namespace_contains__": contains}
 
 
 def install(record):

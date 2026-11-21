@@ -1,17 +1,17 @@
 {
   "source_commit": "eb11aec4be8cb2122afe713a4816662c3f0fb2fa",
   "collected_tests": 1621,
-  "baseline_map_sha256": "373550db7f018aa4e4109bbb201efc30cf4c11fd1dfa051fe07915ad4b312ef9",
+  "baseline_map_sha256": "d42367b6ba72ef546e7ca88d8fe107fbfa06384295b541b87248aad28266b6f6",
   "import_profile_sha256": "4f8696841dcbf1363746d5b882bfae1809a677cffe2013a4c2ab23bae9bcdc86",
   "generator_sha256": "385298feb213f4ec0be21a53f8dff78e5a427696e431f1bf215431a1ea5c2a87",
   "input_profiles": {
-    "collection-profile.json.gz": "ce34d6f62117720a01e097525acc8be8f6dafbc44ffc7e5e70891fc6b691ede4",
-    "class-dict-readers.json.gz": "338d8d51e1c33d7b3ec9047efcadd6fc36e249a1718723343a77580568ad153e"
+    "collection-profile.json.gz": "84629d7ba9bcceaae9ef575930958629b8c213392e63a6c422426e30c5f74c6b",
+    "class-dict-readers.json.gz": "6457a26700abd297a6229659d640a8bd0cb54e494f9b046c082c39e768b53cae"
   },
   "outputs": {
-    "baseline-map.json.gz": "8588bead2f8f7c3be2288a9c61e5da907c2024faba3c0a59a55650a525da8f4c",
-    "collection-profile.json.gz": "84629d7ba9bcceaae9ef575930958629b8c213392e63a6c422426e30c5f74c6b",
-    "class-dict-readers.json.gz": "4dd171318e793307ea6e9ae7891a1f91cae3a513e31233eeaf0dcaca868ea77a"
+    "baseline-map.json.gz": "40d02590d502eab2e013dfc5b9d3338ebac60c43d4a046d2aaf38438e283733e",
+    "collection-profile.json.gz": "a6e6971d0b9be5e839c2dbec53feb57d462bdc31ef4982329f271591de3459c1",
+    "class-dict-readers.json.gz": "2d0f301059d7429fbdda2f5a0bb13f4de77b00af163f96b3a5a8662af99cb597"
   },
   "collection_attributes": 3503,
   "collection_class_dicts": 76,

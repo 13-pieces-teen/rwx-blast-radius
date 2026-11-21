@@ -8,6 +8,12 @@ Submission **BB-CB13EEB5**, commit `ccec7a6b43f68af122aa53e1d9558a053ea05b41`, w
 
 The previous entry `5887d18` scored 471.7 seconds with one missed commit and 300 penalty seconds per run. The new total improves by **223.3 seconds (47.34%)**. Its non-penalty simulated time increases from 168.450 to 245.407 seconds, so recovering excess coverage remains useful. This is a practice result, not a guarantee for the unseen final. [Official result](docs/official-practice-v6-2026-11-21.json).
 
+## Local optimization round v7
+
+Full-prefix tracing removes isolated-retry import noise while retaining original and historical dependency edges. Namespace profiles distinguish key existence from value reads; complete baseline operand observations prove a narrow class of comparison edits unchanged across all observed inputs. Fresh fork children reduce import-check CPU overhead.
+
+The public sample is zero-miss at **117.861 simulated seconds**, saving **9.222 seconds** against v6. The final image's consecutive three-run CPU-inclusive median is **122.110 seconds**; interleaved v6/v7 controls are **129.370 / 119.548 seconds**. Both measurement series are retained because CPU varies. All **124 Linux regression checks** pass. Final omitted sets have direct passing evidence for 27 cases and exact inherited coverage for 28 historical cases; the first extra historical timeout and its follow-up controls are preserved. [Evidence, provenance and limits](docs/local-optimization-v7.md) · [Machine results](docs/local-v7-results.json).
+
 ## Local robustness round v6
 
 Class-shared fixture reads and values imported by alias exposed two further omission mechanisms. The collector now wraps class fixtures before pytest captures them, and module declaration changes retain indirect consumers, including EOF insertions. Namespace observations safely distinguish individual mapping keys while preserving opaque consumers and derived class state.
@@ -34,6 +40,7 @@ On the **30 public sample patches**, with the official Docker runtime restrictio
 | Field-aware reflection dependencies v4 | 120.413 | 121.797 | 0 |
 | Cache/import/scope-safe selector v5 | 128.523 | 130.441 | 0 |
 | Shared-fixture and namespace-aware selector v6 | 127.083 | 128.908 | 0 |
+| Prefix recovery, namespace keys and comparison observations v7 | 117.861 | 122.110 | 0 |
 
 The v4 result was an 89.94% reduction on the local sample set; v5 intentionally spends more on coverage after reproducing real omissions. These are **local measurements**, not a practice-board or final score. The website's 1614.1-second baseline uses a different evaluation batch and is not the denominator here. CPU is measured as Linux process user+system time, including children; the server uses its container-wide accounting. Small CPU differences between adjacent versions can be measurement noise.
 
@@ -52,7 +59,7 @@ An independently generated 30-mutation batch exposed one collection-time depende
 - Import-time execution, syntax errors, unsupported changes and incomplete source information receive conservative handling. Declaration edits are checked in an isolated import process with all modified modules present together.
 - Scheduling evaluates 1–8 workers using integer milliseconds, longest-test-first balancing, and the 2-second cost of every nonempty worker.
 
-The runtime never reads sample answers or a patch-to-failure lookup table. Only `selector.py`, the import checker, the baseline maps and the pinned upstream tree are copied into the image.
+The runtime never reads sample answers or a patch-to-failure lookup table. Only `selector.py`, its import/comparison helpers, the baseline maps and the pinned upstream tree are copied into the image.
 
 The image retains SQLGlot's MIT license at `/opt/sqlglot/LICENSE`; a copy is also in [docs/SQLGLOT_LICENSE.txt](docs/SQLGLOT_LICENSE.txt).
 

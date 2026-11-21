@@ -8,6 +8,7 @@ RUN python -m compileall -q /opt/sqlglot
 FROM source AS runtime
 COPY selector.py /app/selector.py
 COPY tools/import_check.py /app/tools/import_check.py
+COPY tools/fork_import.py tools/comparison_proof.py tools/comparison_values.py /app/tools/
 COPY artifacts /app/artifacts
 ENV PYTHONDONTWRITEBYTECODE=1
 CMD ["python", "/app/selector.py"]

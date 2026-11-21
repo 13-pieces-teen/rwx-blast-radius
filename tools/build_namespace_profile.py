@@ -35,7 +35,7 @@ def main():
     collector = Collector(source, args.output)
     collector.cov = NoCoverage()
     collector.cold_caches = args.cold_caches
-    observed = {category: defaultdict(set) for category in ("all", "opaque", "fields")}
+    observed = {category: defaultdict(set) for category in ("all", "opaque", "fields", "keys")}
     source_hashes = {}
     for base in ("sqlglot", "tests"):
         for path in sorted((source / base).rglob("*.py")):
@@ -44,7 +44,7 @@ def main():
                 raise ValueError("observer helper name collision")
             source_hashes[path.relative_to(source).as_posix()] = hashlib.sha256(text.encode()).hexdigest()
 
-    def record(obj, key):
+    def record(obj, key, kind=None):
         if not isinstance(obj, type) or not obj.__module__.startswith("sqlglot"):
             return
         module = sys.modules.get(obj.__module__)
@@ -53,7 +53,9 @@ def main():
         if path and path.is_relative_to(source):
             symbol = path.relative_to(source).as_posix() + ":" + obj.__name__
             observed["all"][symbol].add(collector.context)
-            if key is None:
+            if kind == "keys":
+                observed["keys"][symbol].add(collector.context)
+            elif key is None:
                 observed["opaque"][symbol].add(collector.context)
             else:
                 observed["fields"][symbol + ":" + key].add(collector.context)
@@ -94,11 +96,11 @@ def main():
     for name, i in positions.items():
         class_bits[name.rsplit("::", 1)[0]] |= 1 << i
     mode = "eager-import-collection" if args.eager_import_only else ("cold" if args.cold_caches else "warm")
-    result = {"source_commit": "eb11aec4be8cb2122afe713a4816662c3f0fb2fa", "ids": ids,
+    result = {"format_version": 2, "source_commit": "eb11aec4be8cb2122afe713a4816662c3f0fb2fa", "ids": ids,
               "complete": code == 0 and not failures and bool(ids), "failures": failures,
               "mode": mode, "source_hashes": source_hashes,
               "generator_hashes": generator_hashes,
-              "provenance": "Baseline mappingproxy.get keys; all other namespace reads opaque; original namespace objects retained"}
+              "provenance": "Baseline mappingproxy.get values and exact-string membership keys; other reads opaque; original namespaces retained"}
     for category, sites in observed.items():
         readers = {}
         collection = []

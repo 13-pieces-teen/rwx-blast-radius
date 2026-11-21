@@ -1,0 +1,25 @@
+{
+  "source_commit": "eb11aec4be8cb2122afe713a4816662c3f0fb2fa",
+  "tests": 1621,
+  "modes": [
+    "cold",
+    "eager-import-collection",
+    "warm"
+  ],
+  "input_sha256": [
+    "0a203ebe2afa4e8c6e2bb704e6f8e716ed781572c110f656d0e045ae5c844816",
+    "64d5f3344e4a8b8fb3937ea6a29cd53c0840a0b1ee5eda916ef1ab0d48d8ddc2",
+    "97af59868dede650541afe8020763df6d09bbd2a129c34f24fe2fe801297200f"
+  ],
+  "generator_hashes": {
+    "build_comparison_profile.py": "8648c06fc5d97540e9717374b23b59da932c6f254062ef54284ce1b437ee31cb",
+    "build_maps.py": "877ae4dfbc25902c828f6787ae5185aab42aac82989ac01cb484212ead4b2c7e",
+    "comparison_values.py": "3c790820d38ec178341ffdd71a7720aac530343f27e811e61286135163b5d498"
+  },
+  "merge_generator_sha256": "b186f2645c9d27a5881848cb4e9f48a43c4699abb1f8e0f91365a7eab35667e5",
+  "sites": 1225,
+  "precise": 839,
+  "bytes": 67085,
+  "sha256": "4d4af5df97ac75a528c13ff3b0661435d5e2800542281cd46bfedc12d065b04a",
+  "evidence": "Union of raw baseline builtin comparison operands; no mutation outcomes"
+}

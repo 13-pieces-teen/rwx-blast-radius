@@ -17,6 +17,9 @@ import subprocess
 import sys
 import types
 
+from tools.comparison_proof import equivalent_comparisons
+from tools.fork_import import run as run_import_check
+
 
 @dataclass
 class FileChange:
@@ -333,6 +336,12 @@ class Selector:
                     and namespaces.get("source_commit") == self.map.get("source_commit")
                     and namespaces.get("source_hashes") == self.map.get("source_hashes")
                     and namespaces.get("ids") == self.map["ids"]
+                    and type(namespaces.get("format_version", 1)) is int
+                    and ((namespaces.get("format_version", 1) == 1 and "keys" not in namespaces) or
+                         (namespaces.get("format_version") == 2
+                          and isinstance(namespaces.get("keys"), dict)
+                          and isinstance(namespaces["keys"].get("readers"), dict)
+                          and isinstance(namespaces["keys"].get("collection"), list)))
                     and {"warm", "cold", "eager-import-collection"} <= set(namespaces.get("modes", []))):
                 self.namespace_profile = namespaces
                 for category in ("all", "opaque", "fields"):
@@ -350,6 +359,16 @@ class Selector:
                 for function in reflection["functions"]:
                     self.reflections.setdefault(function["path"], []).append(function)
         self.profiles = None
+        self.comparison_values = None
+        comparison_path = maps.parent / "comparison-values.json.gz"
+        if comparison_path.exists():
+            comparisons = json.loads(gzip.decompress(comparison_path.read_bytes()))
+            if (comparisons.get("complete") and not comparisons.get("failures")
+                    and comparisons.get("source_commit") == self.map.get("source_commit")
+                    and comparisons.get("source_hashes") == self.map.get("source_hashes")
+                    and comparisons.get("ids") == self.map["ids"]
+                    and {"warm", "cold", "eager-import-collection"} <= set(comparisons.get("modes", []))):
+                self.comparison_values = comparisons
         profile_path = maps.parent / "type-profiles.json.gz"
         if profile_path.exists():
             profiles = json.loads(gzip.decompress(profile_path.read_bytes()))
@@ -607,6 +626,9 @@ class Selector:
             return self.bits("reads", path) | reflected
         if self.allow_operator_proof and self.equivalent_operators(path, tree, new_tree):
             return self.bits("reads", path) | reflected
+        if (self.allow_operator_proof and self.comparison_values is not None
+                and equivalent_comparisons(path, tree, new_tree, self.comparison_values)):
+            return self.bits("reads", path) | reflected
         self.lambda_body_only[path] = lambda_body_edits_only(tree, new_tree)
         structural = self.structural_impact(path, tree, new_tree, source, modified)
         declaration_changed = not same_ast(tree, new_tree, ignore_function_bodies=True,
@@ -692,7 +714,7 @@ class Selector:
                 request = json.dumps({"source": str(self.source), "overrides": self.overrides,
                                       "imports": imports}).encode()
                 checker = Path(__file__).parent / "tools/import_check.py"
-                result = subprocess.run([sys.executable, "-B", str(checker)], input=request,
+                result = run_import_check([sys.executable, "-B", str(checker)], input=request,
                                         stdout=subprocess.DEVNULL, stderr=subprocess.PIPE, timeout=8)
                 if result.returncode:
                     print("import validation failed; selecting all tests", file=sys.stderr)

@@ -498,6 +498,44 @@ class SelectionTests(unittest.TestCase):
                         "ids": self.map["ids"], "types": [facts("int"), facts(none=True)],
                         "comparisons": {"module.py:2:11": [[0, 1, False, False]]}}
 
+    def configure_comparison_values(self, **overrides):
+        from tools.comparison_values import encode
+        self.text = "def f(a):\n    return a < 10\n"
+        (self.root / "module.py").write_text(self.text)
+        self.map["lines"] = {"module.py": {"2": "3"}}
+        self.map["source_commit"] = "test-commit"
+        payload = {"complete": True, "failures": [], "source_commit": "test-commit",
+                   "source_hashes": self.map["source_hashes"], "ids": self.map["ids"],
+                   "modes": ["warm", "cold", "eager-import-collection"],
+                   "sites": {"module.py:2:11": {"operation": "Lt", "opaque": False,
+                       "observations": [(encode(1), encode(10), True), (encode(12), encode(10), False)]}}}
+        payload.update(overrides)
+        (self.root / "comparison-values.json.gz").write_bytes(gzip.compress(json.dumps(payload).encode()))
+
+    def test_comparison_value_proof_preserves_source_and_reflection_readers(self):
+        self.configure_comparison_values()
+        self.assertEqual(self.selected(self.text.replace("< 10", "<= 10")), set())
+        self.map["reads"] = {"module.py": "2"}
+        self.assertEqual(self.selected(self.text.replace("< 10", "<= 10")), {9})
+        self.configure_reflection("co_code")
+        self.assertEqual(self.selected(self.text.replace("< 10", "<= 10")), {7, 9})
+
+    def test_comparison_proof_requires_complete_matching_modes_and_manifest(self):
+        for key, value in (("complete", False), ("source_commit", "other"),
+                           ("source_hashes", {"unknown": "changed"}), ("ids", []),
+                           ("modes", ["warm", "cold"]), ("failures", ["failed"])):
+            self.configure_comparison_values(**{key: value})
+            self.assertEqual(self.selected(self.text.replace("< 10", "<= 10")), {7, 9})
+
+    def test_comparison_value_proof_is_disabled_for_combined_mutations(self):
+        self.configure_comparison_values()
+        other = "def g():\n    return 1\n"
+        (self.root / "other.py").write_text(other)
+        self.map["lines"]["other.py"] = {"2": "1"}
+        patch = diff(self.text, self.text.replace("< 10", "<= 10")) + diff(
+            other, other.replace("return 1", "return 2"), "other.py")
+        self.assertEqual({t["number"] for t in self.selector().select(patch)}, {7, 9})
+
     def save_profile(self):
         (self.root / "type-profiles.json.gz").write_bytes(gzip.compress(json.dumps(self.profile).encode()))
 

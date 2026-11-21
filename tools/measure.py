@@ -1,5 +1,6 @@
 """Local evaluation wrapper, not part of the competition entrypoint."""
 import json
+from pathlib import Path
 import resource
 import runpy
 import sys
@@ -7,6 +8,9 @@ import time
 
 path = sys.argv[1]
 sys.argv = sys.argv[1:]
+# Match `python /app/selector.py`: run_path alone does not add the script's
+# directory, so separately packaged runtime helpers otherwise cannot import.
+sys.path.insert(0, str(Path(path).resolve().parent))
 started = time.monotonic()
 try:
     runpy.run_path(path, run_name="__main__")

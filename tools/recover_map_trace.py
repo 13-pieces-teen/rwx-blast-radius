@@ -5,6 +5,7 @@ full-suite failure followed by a passing isolated retry is never presented as
 one passing full-suite run.
 """
 import argparse
+import gzip
 import hashlib
 import json
 from pathlib import Path
@@ -31,6 +32,20 @@ def replace_retried_reads(original, retried, retry_ids):
     return {path: sorted(contexts) for path, contexts in result.items() if contexts}, removed
 
 
+def validate_prefix_sources(prefix, manifest, source):
+    expected = manifest["source_hashes"]
+    if set(prefix["source_hashes"]) != set(expected):
+        raise ValueError("prefix source catalog differs from pinned baseline")
+    raw_hashes, normalized_hashes = {}, {}
+    for relative in expected:
+        content = (source / relative).read_bytes()
+        raw_hashes[relative] = hashlib.sha256(content).hexdigest()
+        normalized_hashes[relative] = hashlib.sha256(content.replace(b"\r\n", b"\n")).hexdigest()
+    if prefix["source_hashes"] != raw_hashes or normalized_hashes != expected:
+        raise ValueError("prefix source content differs from pinned baseline")
+    return "Raw source bytes verified unchanged; CRLF normalized only for comparison with the baseline map manifest"
+
+
 def main():
     import coverage
     parser = argparse.ArgumentParser()
@@ -38,6 +53,7 @@ def main():
     parser.add_argument("--supplement", type=Path, required=True)
     parser.add_argument("--output", type=Path, required=True)
     parser.add_argument("--reason", required=True)
+    parser.add_argument("--source", type=Path, default=Path("/src"))
     args = parser.parse_args()
     if args.output.resolve() in (args.base.resolve(), args.supplement.resolve()):
         raise ValueError("recovery must preserve its inputs")
@@ -46,6 +62,36 @@ def main():
     base_bytes = (args.base / "observations.json").read_bytes()
     retry_bytes = (args.supplement / "observations.json").read_bytes()
     base, retry = json.loads(base_bytes), json.loads(retry_bytes)
+    prefix_path = args.supplement / "prefix-provenance.json"
+    prefix = None
+    if prefix_path.exists():
+        if __package__:
+            from .retrace_prefix import validate_prefix
+        else:
+            from retrace_prefix import validate_prefix
+        prefix = json.loads(prefix_path.read_text())
+        if (prefix.get("complete") is not True or
+                prefix.get("base_observations_sha256") != hashlib.sha256(base_bytes).hexdigest()):
+            raise ValueError("incomplete prefix or original trace mismatch")
+        validate_prefix(base, prefix)
+        if retry["items"] != [prefix["target"]]:
+            raise ValueError("prefix supplement must contain exactly its verified target")
+        target_results = [row for row in prefix["prefix_results"] if row["id"] == prefix["target"]]
+        if retry.get("generator_hashes") != prefix["generator_hashes"] or retry["results"] != target_results:
+            raise ValueError("supplement observer identity/results differ from prefix provenance")
+        seal_path = args.supplement / "prefix-seal.json"
+        seal = json.loads(seal_path.read_text())
+        if (seal.get("complete") is not True or
+                seal.get("base_observations_sha256") != hashlib.sha256(base_bytes).hexdigest() or
+                any(hashlib.sha256((args.supplement/name).read_bytes()).hexdigest() != seal["sha256"].get(name)
+                    for name in ("observations.json", ".coverage", "prefix-provenance.json"))):
+            raise ValueError("prefix immutable trace seal mismatch")
+        manifest_path = Path(__file__).resolve().parents[1] / "artifacts/baseline-map.json.gz"
+        manifest = json.loads(gzip.decompress(manifest_path.read_bytes()))
+        if (prefix.get("source_commit") != manifest["source_commit"] or
+                sorted(prefix["full_collection"]) != manifest["ids"]):
+            raise ValueError("prefix source/test manifest differs from pinned baseline")
+        source_verification = validate_prefix_sources(prefix, manifest, args.source)
     validate_observations(retry)
     base_data = validate_coverage(args.base, base)
     retry_data = validate_coverage(args.supplement, retry)
@@ -71,6 +117,16 @@ def main():
         "retry_tests": sorted(retry_ids),
         "read_recovery": "Retried test file reads replaced by successful observations; failed-run diagnostic reads excluded. Other dependency categories remain unioned.",
         "excluded_failed_read_edges": removed_reads,
+        "prefix_provenance": ({"sha256": hashlib.sha256(prefix_path.read_bytes()).hexdigest(),
+                               "executed_tests": len(prefix["executed_prefix"]),
+                               "mode": prefix["mode"], "complete": True,
+                               "original_generator_identity": (
+                                   "recorded" if base.get("generator_hashes") else
+                                   "unavailable in legacy raw trace; no claim of identical observer source"),
+                               "source_verification": source_verification,
+                               "trace_seal_sha256": hashlib.sha256(seal_path.read_bytes()).hexdigest(),
+                               "capture_embedded_hashes": seal["capture_embedded_hashes"],
+                               "source_hashes": prefix["source_hashes"]} if prefix else None),
     })
     validate_observations(base)
     args.output.mkdir(parents=True, exist_ok=True)

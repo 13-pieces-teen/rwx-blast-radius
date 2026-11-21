@@ -1,0 +1,274 @@
+{
+  "date": "2026-11-21",
+  "scope": "Local evidence; official practice results are recorded separately",
+  "base_submission": "ccec7a6b43f68af122aa53e1d9558a053ea05b41",
+  "pinned_source": "eb11aec4be8cb2122afe713a4816662c3f0fb2fa",
+  "image": "rwx-selector:v7-local",
+  "image_id": "sha256:a2fe5a62104ea3da2f332851d0b3d53d685189a2d1fc853ac2020aa70a43b05c",
+  "selector_sha256": "bf1676c6c053dcfa02d9bf259a12c0a5b65dcb2ecdf78ad667ffc707c75a0e03",
+  "artifacts_sha256": {
+    "baseline-map.json.gz": "6c14c6f083287537b083a5ef82795212edc36e2e1425b6a937a526944e1a2411",
+    "class-dict-readers.json.gz": "2d0f301059d7429fbdda2f5a0bb13f4de77b00af163f96b3a5a8662af99cb597",
+    "class-setup-profile.json.gz": "35381a5cdd49db837e28a22dc1c6b8ba67e6e3b28ee8404cf9e260b29f49f60e",
+    "collection-profile.json.gz": "a6e6971d0b9be5e839c2dbec53feb57d462bdc31ef4982329f271591de3459c1",
+    "comparison-values.json.gz": "4d4af5df97ac75a528c13ff3b0661435d5e2800542281cd46bfedc12d065b04a",
+    "import-profile.json.gz": "4f8696841dcbf1363746d5b882bfae1809a677cffe2013a4c2ab23bae9bcdc86",
+    "lambda-call-readers.json.gz": "4699554214df1e5ed1df2a7bff86cb9d2d5842a23df2f8462e8fda4585df975c",
+    "namespace-readers.json.gz": "0bfc001b05473769caac0e532adbc6774bc6618191fa27ac0bf64663e0998338",
+    "reflection-fields.json.gz": "e6a0e6181aecefb5ee07682cab444a01705efa62d6bb8b71a055f8907c86e905",
+    "type-profiles.json.gz": "6a89b69ef7468166f0950ac30a616e6fa1bd59a4387bfced57fb8863a31397d4"
+  },
+  "sample_runs": [
+    {
+      "ok": true,
+      "simulated_milliseconds": 117861,
+      "missed_commits": [],
+      "cpu_seconds": 4.2487829999999995,
+      "wall_seconds": 4.230165531000239,
+      "max_rss_kb": 96208,
+      "total_seconds": 122.10978300000001
+    },
+    {
+      "ok": true,
+      "simulated_milliseconds": 117861,
+      "missed_commits": [],
+      "cpu_seconds": 5.636342000000001,
+      "wall_seconds": 5.345391233000555,
+      "max_rss_kb": 96208,
+      "total_seconds": 123.497342
+    },
+    {
+      "ok": true,
+      "simulated_milliseconds": 117861,
+      "missed_commits": [],
+      "cpu_seconds": 3.7296,
+      "wall_seconds": 3.6372497600004863,
+      "max_rss_kb": 96208,
+      "total_seconds": 121.59060000000001
+    }
+  ],
+  "sample_median_total_seconds": 122.10978300000001,
+  "interleaved_sample_control": {
+    "runs": [
+      {
+        "version": "v6",
+        "index": 1,
+        "image_id": "sha256:d0ea977481575e324bd4197198127b39be0fec4d7c3f04c880ebddbb60c7facf",
+        "ok": true,
+        "simulated_milliseconds": 127083,
+        "missed_commits": [],
+        "cpu_seconds": 2.8688799999999994,
+        "wall_seconds": 2.7943015549990378,
+        "max_rss_kb": 84408,
+        "total_seconds": 129.95188
+      },
+      {
+        "version": "v7",
+        "index": 1,
+        "image_id": "sha256:a2fe5a62104ea3da2f332851d0b3d53d685189a2d1fc853ac2020aa70a43b05c",
+        "ok": true,
+        "simulated_milliseconds": 117861,
+        "missed_commits": [],
+        "cpu_seconds": 1.6868349999999999,
+        "wall_seconds": 1.6966853690009884,
+        "max_rss_kb": 96524,
+        "total_seconds": 119.547835
+      },
+      {
+        "version": "v7",
+        "index": 2,
+        "image_id": "sha256:a2fe5a62104ea3da2f332851d0b3d53d685189a2d1fc853ac2020aa70a43b05c",
+        "ok": true,
+        "simulated_milliseconds": 117861,
+        "missed_commits": [],
+        "cpu_seconds": 1.5985439999999997,
+        "wall_seconds": 1.6210942319994501,
+        "max_rss_kb": 96204,
+        "total_seconds": 119.45954400000001
+      },
+      {
+        "version": "v6",
+        "index": 2,
+        "image_id": "sha256:d0ea977481575e324bd4197198127b39be0fec4d7c3f04c880ebddbb60c7facf",
+        "ok": true,
+        "simulated_milliseconds": 127083,
+        "missed_commits": [],
+        "cpu_seconds": 2.2869019999999995,
+        "wall_seconds": 2.297833268999966,
+        "max_rss_kb": 84220,
+        "total_seconds": 129.369902
+      },
+      {
+        "version": "v6",
+        "index": 3,
+        "image_id": "sha256:d0ea977481575e324bd4197198127b39be0fec4d7c3f04c880ebddbb60c7facf",
+        "ok": true,
+        "simulated_milliseconds": 127083,
+        "missed_commits": [],
+        "cpu_seconds": 2.185447,
+        "wall_seconds": 2.187399694001215,
+        "max_rss_kb": 84204,
+        "total_seconds": 129.268447
+      },
+      {
+        "version": "v7",
+        "index": 3,
+        "image_id": "sha256:a2fe5a62104ea3da2f332851d0b3d53d685189a2d1fc853ac2020aa70a43b05c",
+        "ok": true,
+        "simulated_milliseconds": 117861,
+        "missed_commits": [],
+        "cpu_seconds": 1.8617709999999998,
+        "wall_seconds": 1.870076245000746,
+        "max_rss_kb": 96488,
+        "total_seconds": 119.72277100000001
+      }
+    ],
+    "summary": {
+      "v6": {
+        "median_total_seconds": 129.369902,
+        "median_cpu_seconds": 2.2869019999999995
+      },
+      "v7": {
+        "median_total_seconds": 119.547835,
+        "median_cpu_seconds": 1.6868349999999999
+      }
+    }
+  },
+  "sample_simulated_improvement_seconds": 9.222,
+  "interleaved_total_median_improvement_seconds": 9.82206699999999,
+  "earlier_integration_measurement": {
+    "path": "evaluation/local-v7-before-metadata-normalization/report.json",
+    "sha256": "083fe32d197c0872aa2d1a8c7134a5de6c0aef11bfacc2ad74433a965214a649",
+    "median_total_seconds": 119.255137,
+    "difference": "Same runtime code and gzip profiles; provenance JSON line endings normalized later"
+  },
+  "unit_tests_passed": 124,
+  "prefix_recovery": {
+    "mode": "Independent review bound after capture; prefix seals and raw traces unchanged",
+    "candidate_map_sha256": "6c14c6f083287537b083a5ef82795212edc36e2e1425b6a937a526944e1a2411",
+    "audits": {
+      "evaluation\\round-v7-class\\memory-recovery-audit.json": {
+        "sha256": "acf3c86c3cac3960fbd59b81190899070cfb5b56c66e37ee87bdc92b732ce82f",
+        "all_checks_passed": true,
+        "top_level_keys": [
+          "target",
+          "inputs",
+          "prefix_provenance_sha256",
+          "frozen_manifest_sha256",
+          "prefix_test_count",
+          "checks",
+          "all_checks_passed",
+          "dependency_categories",
+          "isolated_edges_absent_from_recovered",
+          "isolated_removed_line_edges",
+          "removed_contexts",
+          "limitations"
+        ]
+      },
+      "evaluation\\round-v7-class\\tpcds-recovery-audit.json": {
+        "sha256": "4ebbf819272d94c98ea577e3de727630a0bebe53a28f6285ba2e21db1f89b73a",
+        "all_checks_passed": true,
+        "top_level_keys": [
+          "target",
+          "inputs",
+          "prefix_provenance_sha256",
+          "frozen_manifest_sha256",
+          "prefix_test_count",
+          "checks",
+          "all_checks_passed",
+          "dependency_categories",
+          "isolated_edges_absent_from_recovered",
+          "isolated_removed_line_edges",
+          "removed_contexts",
+          "limitations"
+        ]
+      },
+      "evaluation\\round-v7-class\\final-map-audit.json": {
+        "sha256": "9d39e7288abd9d28a12883b2454c038fd8efdbea07a96f91100922472923cb74",
+        "all_checks_passed": true,
+        "top_level_keys": [
+          "map_inputs",
+          "raw_inputs",
+          "categories",
+          "collections",
+          "checks",
+          "all_checks_passed",
+          "limitations"
+        ]
+      }
+    },
+    "prefix_seals": {
+      "maps-v7-prefix-retry": "03a58c42fa77d95858c94c85bebaa8a08ad7ed6fde9a37c8effc9fe2aaa44fbe",
+      "maps-v6-prefix-retry": "8108693e20b386fe2b2684ac0ab1d70d3f59e21be80ab2d147d688cc65308bfe"
+    }
+  },
+  "deployment_audit_sha256": "3e4b4939ec0e08222e4d123b44d32fd4f6fd28efc730678b740d44628d0d6e99",
+  "deployment_scope": "The tracked official sample answers are used only by the external local scorer; sample/evaluation are excluded from the image and answers are never mounted at runtime.",
+  "final_omission_evidence": {
+    "historical_records_covered": 28,
+    "direct_records_passed": 27,
+    "direct_records_pending": 0,
+    "direct_records_unsuccessful": 0,
+    "direct_test_executions_passed": 40548,
+    "prior_unsuccessful_attempt_count": 1,
+    "delta_rows_passed": 23,
+    "delta_executions_passed": 136
+  },
+  "final_omission_evidence_sha256": "4bc48c0f878912be6260c677d4e714f3f54c900acbb77ed175794ff5905e1da6",
+  "exact_final_omission_certificate_sha256": "a2e8f5856c4ea92917524ab4d98adf02e9346ab6f0258506bab96e170e61f937",
+  "comparison_diagnostics": {
+    "mutations": 8,
+    "seed": 202611210708,
+    "tests_passed": 12960,
+    "subtests_passed": 203520,
+    "timeouts": 0,
+    "failed_tests": 0
+  },
+  "namespace_diagnostics": {
+    "mutations": 6,
+    "tests_passed": 8768,
+    "subtests_passed": 101516,
+    "newly_omitted": 485,
+    "timeouts": 0,
+    "failed_tests": 0
+  },
+  "historical_timeout_followup": {
+    "initial_failure": "extra-013: test_max_nodes exceeded the unchanged 120-second per-test limit; no semantic assertion failure was observed",
+    "initial_failure_log_sha256": "a89c08f9c4d7ea4081df5c99d2cdc9d5f624c2c7d0296218d198a1892e8763dd",
+    "control_report_sha256": "34957cfe13914096f113664d65a0232d11018a8e6bf2bb18d7ec4756f6090102",
+    "control_provenance_sha256": "6b4fdab4e037147d420d48d6bde594312bb53cbbf3e8cbf5c2485639e1ee5001",
+    "runs": [
+      {
+        "mode": "baseline",
+        "exit_code": 0,
+        "passed": 1616,
+        "failed": [],
+        "wall_seconds": 84.90473937000024,
+        "child_cpu_seconds": 97.110795,
+        "config_sha256": "518ef998a400019231c646f50d3fe45d3540ca4cd4cc301f961f4142c5141a54",
+        "omitted_ids_sha256": "6518ce18bdcb7cec80f139e6c361ff60650f58548aee7be99771aa4091c6d976"
+      },
+      {
+        "mode": "mutant",
+        "exit_code": 0,
+        "passed": 1616,
+        "failed": [],
+        "wall_seconds": 93.27835612700073,
+        "child_cpu_seconds": 107.21943100000001,
+        "config_sha256": "c14e024fbfa1dd6316e87cf4e959ed6d3834f673f3c1a6911e968008f72b29d2",
+        "omitted_ids_sha256": "6518ce18bdcb7cec80f139e6c361ff60650f58548aee7be99771aa4091c6d976"
+      }
+    ],
+    "conditions": "Same full 1616 omitted IDs/order, 2CPU/4GB, 120-second per-test and 240-second per-patch limits; no code or timeout change",
+    "causal_limit": "The original timeout did not recur. Its resource cause is not established by available snapshots. The successful mutant run, not the baseline control, supplies omission evidence."
+  },
+  "limits": [
+    "Directed mutations and public samples are not an unbiased hidden benchmark.",
+    "28 historical records inherit exact certified passing sets; they are not new executions.",
+    "Comparison probes used an earlier frozen selector and passed the entire scoreable universe; final omitted sets are verified subsets.",
+    "Test execution counts repeat identities across mutations and reruns; they are not unique tests.",
+    "The first extra-013 full-omission attempt had a 120-second test_max_nodes timeout. Original failure and matched follow-up controls are retained separately.",
+    "CPU varies between rounds; both consecutive and interleaved measurements are retained.",
+    "No guarantee is made for the unseen final evaluation."
+  ]
+}
