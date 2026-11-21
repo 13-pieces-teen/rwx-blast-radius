@@ -1,0 +1,191 @@
+{
+  "version": "v8",
+  "baseline_commit": "a28c3f227d4cad0effcb037e0162176c1407421c",
+  "selector_sha256": "4f281e4a1a37853e2f165830b4a9d95724f7cef234edc58708811ccf048fe347",
+  "source_commit": "eb11aec4be8cb2122afe713a4816662c3f0fb2fa",
+  "historical_patches_complete_selection_and_workers_unchanged": 156,
+  "frozen_candidate_linux_regressions_passed": 124,
+  "consecutive_sample": {
+    "image": "rwx-selector:v8-local",
+    "image_id": "sha256:3deceb2810fac807ba33d0835a734dde81ab4166b7cc7337f16ea275cfe0f48e",
+    "data": "D:\\Codex_Project\\build\\rwx-blast-radius\\sample",
+    "runs": [
+      {
+        "ok": true,
+        "simulated_milliseconds": 117861,
+        "missed_commits": [],
+        "cpu_seconds": 1.6263319999999999,
+        "wall_seconds": 1.7908893239999983,
+        "max_rss_kb": 96328,
+        "total_seconds": 119.48733200000001
+      },
+      {
+        "ok": true,
+        "simulated_milliseconds": 117861,
+        "missed_commits": [],
+        "cpu_seconds": 1.35595,
+        "wall_seconds": 1.3854043810000007,
+        "max_rss_kb": 96440,
+        "total_seconds": 119.21695
+      },
+      {
+        "ok": true,
+        "simulated_milliseconds": 117861,
+        "missed_commits": [],
+        "cpu_seconds": 1.4342079999999997,
+        "wall_seconds": 1.4737631189999973,
+        "max_rss_kb": 96456,
+        "total_seconds": 119.295208
+      }
+    ],
+    "median_total_seconds": 119.295208,
+    "cpu_measurement": "Linux process user+system CPU, including child processes"
+  },
+  "interleaved_actual_images": {
+    "provenance": {
+      "images": {
+        "v7": "sha256:a2fe5a62104ea3da2f332851d0b3d53d685189a2d1fc853ac2020aa70a43b05c",
+        "v8": "sha256:3deceb2810fac807ba33d0835a734dde81ab4166b7cc7337f16ea275cfe0f48e"
+      },
+      "script_sha256": "6e8e4474624407dc9cce3b573d265755a60297411960c7bfe46d15207bc1595c",
+      "measure_sha256": "401befcfb8de225edba736db1ba395b3acb508feebb87c58e449586f762dca19",
+      "tests_sha256": "21257a93c58f4b0646c5122586d2141b4b340ad85b2f0bb251af3746de3f0dc2",
+      "patch_sha256": {
+        "2haz.patch": "0630e2bc13b2f706261e5be18a3ea4fdf00df5aed1065397fa2a60ddf1a3818b",
+        "2jrq.patch": "e06ade06a527994578a1c4d220dbb8451061d9df32ec4c3da30e26a98b19b89f",
+        "2qn5.patch": "203923059dd8b55a34d6aa37a64643a4bec227e92937152b0bbc2d2eb135c35f",
+        "2vdj.patch": "2b12b9aa37cca8fa3abfe4bf413f44c75bb08548efdca6d1641767e9d12c7768",
+        "3utz.patch": "cd6f36e609c550714d98d41654ec9ae108ed98400d5aab0690c907cc7dad500d",
+        "4d63.patch": "0f9b8a5cace3917816cc71616e960a67335879fce5c6234de37557c3a51c162e",
+        "535z.patch": "ff184ae1bbb4cc913998a456f628381dd0b0d88f9febfb7456f95dedc207b1c0",
+        "5y72.patch": "8d918fd9c25a3880abd15fc0ae59e2eceb3e30ec2951f8d2eb460b6a8ac36f8b",
+        "66ks.patch": "35b3b921abd6d1162c543f0b7d401ad053a8d5556bb3a6449974e50209226130",
+        "6vvp.patch": "f797d9a9550310a4cab92f3d01dd39bb60e34514730b474f2d69f2ccd4923695",
+        "6ze8.patch": "7a8a8b74d07fdf7bcbd299650416b4ebc995e823dbe26c2382daf2eb07f99056",
+        "8y7j.patch": "6dc935b9b5342aa65f17555365ae5f8fb366ab315897ba9f6b7c4834016e012c",
+        "986c.patch": "43e27a383952978086d5875fe888d45d35674a6dcc709deaed9d65b7897c9648",
+        "9u5k.patch": "0352bfd61f6a147d60c31b9c040bbf329f11c7d2175ac0b8f6c90ea959c20ef5",
+        "ary6.patch": "7fa4d48c5c95096669aea19d70fc73b55a3c86bcb8dabd20f6d426e063b30dfa",
+        "bap8.patch": "d90926b86116195c5fef06fd335f3d90b7d3455b9b7ba38a398ca2e7465e1ee7",
+        "bj7g.patch": "5f6340a49752c6bbe9d3fc095e49e78c67c6759e35d47f6c671edada86c8f7d4",
+        "bvw2.patch": "9e0ef88161590bd49f0b88d31348c1d5f33d97cdad506dfe0acdc253f71d1907",
+        "egys.patch": "ef40751274b8dcb5d4d56a430caabb817038091b4e9e947ee12250a617e3f080",
+        "f4bn.patch": "37cb3fe7ded57562ec679305d2d9c5ed2a0b0cf75ae041c9237a66a5d64f3ce4",
+        "f4xa.patch": "464896463e92abd5dd36b6c59b8ad809bd6ed645be7ae2f2e0fb86af00252786",
+        "fryt.patch": "a782289f77511867834a0544c287ed6f13e3d7a326eba8c49685fb11a6a7ec98",
+        "gbav.patch": "dd840238267ab0b8a59ff6776d5a435b935b9e1cb82b90bda4438a5b34580b31",
+        "gbhk.patch": "db22d4fccdd06088b8e42f81e406426dd824ef43a6fe0952b9499bfd63ab59c6",
+        "j6uz.patch": "0a0c68d162eba4d9f226965310106cbd1630c7ab09d209fd56ed313d818d8129",
+        "ktz3.patch": "1964c4ef0cab889a2a73dcf164299de26080a0922caccfb5cb31e1c03a32f0df",
+        "mthh.patch": "30e8bff5581a8a128c34d0ce9beedbd963547c8e21608ffbdfab9e791702d086",
+        "nwnx.patch": "f5186c0aad278ffc7bb6444f8e4768552d51d8e5a71475c057e6febe64d126ff",
+        "rszg.patch": "02547bd56ee999741025f0cd6712552636b36741658516a6902996c67df47317",
+        "st8f.patch": "5b15d60f4d4abafa3cba8519661112f19216e8b1a58e0e3e633e55a03544a4a8"
+      },
+      "method": "3 pairs; v7,v8 then v8,v7 then v7,v8; fresh actual image each run; CPU self+children; 180s fixed",
+      "coverage_scope": "Timing and exact worker equivalence only; no answers read or omission tests executed."
+    },
+    "summary": {
+      "v7": {
+        "cpu_seconds": 1.5352839999999999,
+        "wall_seconds": 1.594849747000012,
+        "simulated_seconds": 117.861,
+        "total_without_miss_penalty": 119.39628400000001
+      },
+      "v8": {
+        "cpu_seconds": 1.393933,
+        "wall_seconds": 1.4324551159999146,
+        "simulated_seconds": 117.861,
+        "total_without_miss_penalty": 119.25493300000001
+      }
+    },
+    "pairs": [
+      {
+        "pair": 1,
+        "v7_minus_v8_cpu": 0.20537300000000003
+      },
+      {
+        "pair": 2,
+        "v7_minus_v8_cpu": 0.17688300000000012
+      },
+      {
+        "pair": 3,
+        "v7_minus_v8_cpu": 0.056684999999999874
+      }
+    ],
+    "runs": [
+      {
+        "pair": 1,
+        "image": "v7",
+        "cpu_seconds": 1.5352839999999999,
+        "wall_seconds": 1.594849747000012,
+        "max_rss_kb": 96652,
+        "simulated_seconds": 117.861,
+        "total_without_miss_penalty": 119.39628400000001,
+        "stdout_sha256": "6d28f1f9028cadb9542e3948016823b37e4f33ea7e90a5262866eda0b5f07abe",
+        "complete_workers_equal": true
+      },
+      {
+        "pair": 1,
+        "image": "v8",
+        "cpu_seconds": 1.3299109999999998,
+        "wall_seconds": 1.35988343300005,
+        "max_rss_kb": 96300,
+        "simulated_seconds": 117.861,
+        "total_without_miss_penalty": 119.190911,
+        "stdout_sha256": "6d28f1f9028cadb9542e3948016823b37e4f33ea7e90a5262866eda0b5f07abe",
+        "complete_workers_equal": true
+      },
+      {
+        "pair": 2,
+        "image": "v8",
+        "cpu_seconds": 1.42103,
+        "wall_seconds": 1.461988642999927,
+        "max_rss_kb": 96444,
+        "simulated_seconds": 117.861,
+        "total_without_miss_penalty": 119.28203,
+        "stdout_sha256": "6d28f1f9028cadb9542e3948016823b37e4f33ea7e90a5262866eda0b5f07abe",
+        "complete_workers_equal": true
+      },
+      {
+        "pair": 2,
+        "image": "v7",
+        "cpu_seconds": 1.5979130000000001,
+        "wall_seconds": 1.6466170379999312,
+        "max_rss_kb": 96364,
+        "simulated_seconds": 117.861,
+        "total_without_miss_penalty": 119.45891300000001,
+        "stdout_sha256": "6d28f1f9028cadb9542e3948016823b37e4f33ea7e90a5262866eda0b5f07abe",
+        "complete_workers_equal": true
+      },
+      {
+        "pair": 3,
+        "image": "v7",
+        "cpu_seconds": 1.450618,
+        "wall_seconds": 1.4950060180000264,
+        "max_rss_kb": 96524,
+        "simulated_seconds": 117.861,
+        "total_without_miss_penalty": 119.31161800000001,
+        "stdout_sha256": "6d28f1f9028cadb9542e3948016823b37e4f33ea7e90a5262866eda0b5f07abe",
+        "complete_workers_equal": true
+      },
+      {
+        "pair": 3,
+        "image": "v8",
+        "cpu_seconds": 1.393933,
+        "wall_seconds": 1.4324551159999146,
+        "max_rss_kb": 96296,
+        "simulated_seconds": 117.861,
+        "total_without_miss_penalty": 119.25493300000001,
+        "stdout_sha256": "6d28f1f9028cadb9542e3948016823b37e4f33ea7e90a5262866eda0b5f07abe",
+        "complete_workers_equal": true
+      }
+    ],
+    "complete_workers_equal_all_six": true,
+    "commits_per_run": 30,
+    "median_cpu_savings": 0.14135099999999978
+  },
+  "official_result": null,
+  "entry_profile_used_in_production": false,
+  "limits": "Local CPU improvement only. The 124 regression run used the byte-identical frozen candidate; historical omitted-test executions were not repeated. Entry research remains uncertified and excluded from the image."
+}

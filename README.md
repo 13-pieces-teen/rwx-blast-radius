@@ -8,6 +8,10 @@ Submission **BB-F47DED7A**, commit `a28c3f227d4cad0effcb037e0162176c1407421c`, w
 
 Compared with v6 (`ccec7a6`, 248.4 seconds, also zero-miss), the total decreases by **34.0 seconds (13.69%)**, including **33.430 seconds** less simulated CI time. The original `5887d18` scored 471.7 seconds with one missed commit and 300 penalty seconds per run. Its hypothetical penalty-free total is about 171.7 seconds, but it did not achieve that as a zero-miss entry. The current non-penalty simulated time remains 43.527 seconds above that original entry. Practice results do not guarantee unseen final performance. [Previous v6 result](docs/official-practice-v6-2026-11-21.json).
 
+## Local optimization round v8
+
+Two necessary-condition guards skip analyses which cannot accept the patch. The 156 historical complete selected-test lists and worker assignments remain identical to v7, and the exact frozen candidate passes all 124 Linux regressions. Three constrained public-sample runs remain zero-miss at **117.861 simulated seconds**, with a **119.295208-second** CPU-inclusive median. Final-image interleaved CPU medians are **1.535284 / 1.393933 seconds** for v7/v8. This is a small local CPU improvement; dictionary-entry research remains outside the submission. [Evidence and limits](docs/local-optimization-v8.md).
+
 ## Local optimization round v7
 
 Full-prefix tracing removes isolated-retry import noise while retaining original and historical dependency edges. Namespace profiles distinguish key existence from value reads; complete baseline operand observations prove a narrow class of comparison edits unchanged across all observed inputs. Fresh fork children reduce import-check CPU overhead.

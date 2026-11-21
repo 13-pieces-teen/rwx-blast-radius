@@ -624,9 +624,12 @@ class Selector:
         reflected = self.reflection_impact(path, source, modified)
         if same_ast(tree, new_tree):
             return self.bits("reads", path) | reflected
-        if self.allow_operator_proof and self.equivalent_operators(path, tree, new_tree):
+        compare_touched = bool(insertions) or any(
+            isinstance(node, ast.Compare) and any(node.lineno <= line <= node.end_lineno for line in touched)
+            for node in nodes)
+        if self.allow_operator_proof and compare_touched and self.equivalent_operators(path, tree, new_tree):
             return self.bits("reads", path) | reflected
-        if (self.allow_operator_proof and self.comparison_values is not None
+        if (self.allow_operator_proof and compare_touched and self.comparison_values is not None
                 and equivalent_comparisons(path, tree, new_tree, self.comparison_values)):
             return self.bits("reads", path) | reflected
         self.lambda_body_only[path] = lambda_body_edits_only(tree, new_tree)
@@ -646,6 +649,23 @@ class Selector:
         self.literal_readers[path] = {}
         old_fields, new_fields = ((class_fields(tree), class_fields(new_tree))
                                   if declaration_changed else ({}, {}))
+        # Unchanged literal fields cannot hide an AST difference. If no
+        # changed field can even be a literal, the later outside-value
+        # equality check would necessarily discard all literal readers.
+        changed_literal = False
+        for key in old_fields.keys() & new_fields.keys():
+            before_value, after_value = old_fields[key][0].value, new_fields[key][0].value
+            if before_value is None or after_value is None or same_ast(before_value, after_value):
+                continue
+            try:
+                ast.literal_eval(before_value)
+                ast.literal_eval(after_value)
+            except (ValueError, TypeError, SyntaxError):
+                continue
+            changed_literal = True
+            break
+        if not changed_literal:
+            old_fields, new_fields = {}, {}
         name_read_fields = ((class_field_name_reads(tree) | class_field_name_reads(new_tree))
                             if old_fields and new_fields else set())
         for key in old_fields.keys() & new_fields.keys():
