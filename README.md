@@ -8,6 +8,10 @@ Submission **BB-CB9A4CE9**, commit `66f69cfd271296ba6055731b1b79fe5b6a649914`, w
 
 V7 reduced the zero-miss v6 score from 248.4 to 214.4 seconds, including **33.430 seconds** less simulated CI time. V8 lowers the displayed total another **0.1 second**, with unchanged simulated CI time. The original `5887d18` scored 471.7 seconds with one missed commit and 300 penalty seconds per run. Its hypothetical penalty-free total is about 171.7 seconds, but it did not achieve that as a zero-miss entry. The current non-penalty simulated time remains 43.527 seconds above that original entry. Practice results do not guarantee unseen final performance. [Previous v7 result](docs/official-practice-v7-2026-11-21.json) · [v6 result](docs/official-practice-v6-2026-11-21.json).
 
+## Local optimization round v9
+
+The current Docker entrypoint is a **prefix observation practice candidate**. It packages a separately validated experiment while retaining the v8 base selector. Its local gains are distribution-dependent and its canonical-order assumption remains a limitation; it has no official score recorded yet. [V9 evidence and limits](docs/local-optimization-v9.md).
+
 ## Local optimization round v8
 
 Two necessary-condition guards skip analyses which cannot accept the patch. The 156 historical complete selected-test lists and worker assignments remain identical to v7, and the exact frozen candidate passes all 124 Linux regressions. Three constrained public-sample runs remain zero-miss at **117.861 simulated seconds**, with a **119.295208-second** CPU-inclusive median. Final-image interleaved CPU medians are **1.535284 / 1.393933 seconds** for v7/v8. This is a small local CPU improvement; dictionary-entry research remains outside the submission. [Evidence and limits](docs/local-optimization-v8.md).
@@ -63,7 +67,7 @@ An independently generated 30-mutation batch exposed one collection-time depende
 - Import-time execution, syntax errors, unsupported changes and incomplete source information receive conservative handling. Declaration edits are checked in an isolated import process with all modified modules present together.
 - Scheduling evaluates 1–8 workers using integer milliseconds, longest-test-first balancing, and the 2-second cost of every nonempty worker.
 
-The runtime never reads sample answers or a patch-to-failure lookup table. Only `selector.py`, its import/comparison helpers, the baseline maps and the pinned upstream tree are copied into the image.
+The runtime never reads sample answers or a patch-to-failure lookup table. Only `semantic_selector.py`, the v8 `selector.py`, their runtime helpers, the baseline maps and the pinned upstream tree are copied into the image.
 
 The image retains SQLGlot's MIT license at `/opt/sqlglot/LICENSE`; a copy is also in [docs/SQLGLOT_LICENSE.txt](docs/SQLGLOT_LICENSE.txt).
 
@@ -71,7 +75,7 @@ The image retains SQLGlot's MIT license at `/opt/sqlglot/LICENSE`; a copy is als
 
 ```sh
 docker build --platform linux/amd64 -t blast-radius-entry .
-python tools/evaluate.py --image blast-radius-entry --label local
+python tools/evaluate.py --image blast-radius-entry --entry-script /app/semantic_selector.py --label local
 ```
 
 The evaluation helper works from PowerShell as well as Linux. It mounts only `sample/commits` and `sample/tests.json` into the container. It runs three times with the official CPU, memory, network, filesystem, user and process restrictions, and saves outputs/reports under `evaluation/`.

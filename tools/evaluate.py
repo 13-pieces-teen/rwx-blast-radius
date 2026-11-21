@@ -19,6 +19,7 @@ def main():
     parser.add_argument("--label", required=True)
     parser.add_argument("--runs", type=int, default=3)
     parser.add_argument("--timeout", type=int, default=180)
+    parser.add_argument("--entry-script", default="/app/selector.py")
     args = parser.parse_args()
     data = args.data.resolve()
     tests = json.loads((data / "tests.json").read_text())["tests"]
@@ -37,7 +38,7 @@ def main():
             "--volume", f"{data / 'commits'}:/data/commits:ro",
             "--volume", f"{data / 'tests.json'}:/data/tests.json:ro",
             "--volume", f"{ROOT / 'tools' / 'measure.py'}:/measure.py:ro",
-            "--entrypoint", "python", image_id, "/measure.py", "/app/selector.py",
+            "--entrypoint", "python", image_id, "/measure.py", args.entry_script,
         ]
         completed = subprocess.run(command, capture_output=True, timeout=args.timeout)
         stdout, stderr = completed.stdout, completed.stderr.decode("utf-8", errors="replace")
@@ -56,7 +57,7 @@ def main():
         evaluation["total_seconds"] = evaluation["simulated_milliseconds"] / 1000 + metrics["cpu_seconds"]
         reports.append(evaluation)
         print(f"Run {index + 1}: {evaluation}", flush=True)
-    result = {"image": args.image, "image_id": image_id, "data": str(data), "runs": reports,
+    result = {"image": args.image, "image_id": image_id, "entry_script": args.entry_script, "data": str(data), "runs": reports,
               "median_total_seconds": statistics.median(x["total_seconds"] for x in reports),
               "cpu_measurement": "Linux process user+system CPU, including child processes"}
     (dest / "report.json").write_text(json.dumps(result, indent=2) + "\n", encoding="utf-8")
