@@ -1,0 +1,52 @@
+{
+  "observed_date": "2026-11-21",
+  "timezone": "Asia/Shanghai",
+  "track": "RWX - Blast Radius",
+  "team": "13",
+  "submission_id": "BB-F47DED7A",
+  "status": "Scored",
+  "repository": "https://github.com/13-pieces-teen/rwx-blast-radius",
+  "commit": "a28c3f227d4cad0effcb037e0162176c1407421c",
+  "official_score_seconds": 214.4,
+  "runs_as_displayed": [
+    {
+      "run": 1,
+      "simulated_seconds": 211.977,
+      "cpu_seconds": 2.42,
+      "missed_commits": 0
+    },
+    {
+      "run": 2,
+      "simulated_seconds": 211.977,
+      "cpu_seconds": 2.44,
+      "missed_commits": 0
+    },
+    {
+      "run": 3,
+      "simulated_seconds": 211.977,
+      "cpu_seconds": 2.44,
+      "missed_commits": 0
+    }
+  ],
+  "penalty_per_missed_commit_seconds": 300,
+  "final_selection_as_observed": "Entered in the final (your best score)",
+  "source": "https://www.joinbuilders.org/buildathon/tracks/blast-radius",
+  "previous_submission": "BB-CB13EEB5",
+  "previous_commit": "ccec7a6b43f68af122aa53e1d9558a053ea05b41",
+  "previous_official_score_seconds": 248.4,
+  "score_improvement_seconds": 34.0,
+  "score_reduction_percent": 13.687601,
+  "previous_nonpenalty_simulated_seconds": 245.407,
+  "current_nonpenalty_simulated_seconds": 211.977,
+  "nonpenalty_simulated_reduction_seconds": 33.43,
+  "original_submission": "BB-BA6CCCF5",
+  "original_official_score_seconds": 471.7,
+  "original_simulated_seconds_including_penalty": 468.45,
+  "original_missed_commits_per_run": 1,
+  "original_hypothetical_total_without_penalty_seconds": 171.7,
+  "original_nonpenalty_simulated_seconds": 168.45,
+  "current_nonpenalty_simulated_increase_from_original_seconds": 43.527,
+  "local_report": "docs/local-v7-results.json",
+  "local_screenshot": "evaluation/local-v7-verified/official-score.jpg",
+  "limits": "Official practice result, not the unseen final. The old missed patch and per-patch hidden costs remain undisclosed. Displayed CPU and final scores are rounded. Subtracting the old penalty is arithmetic, not an actually scored zero-miss entry."
+}

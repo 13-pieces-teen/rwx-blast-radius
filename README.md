@@ -4,9 +4,9 @@ An entry for the RWX Buildathon track. For each independent SQLGlot patch, the s
 
 ## Official practice result
 
-Submission **BB-CB13EEB5**, commit `ccec7a6b43f68af122aa53e1d9558a053ea05b41`, was scored on 2026-11-21: **248.4 seconds**. All three runs missed **zero commits**; each had 245.407 simulated seconds and 2.99, 2.97 and 2.97 CPU seconds. It is the team's current best and selected final entry.
+Submission **BB-F47DED7A**, commit `a28c3f227d4cad0effcb037e0162176c1407421c`, was scored on 2026-11-21: **214.4 seconds**. All three runs missed **zero commits**; each had 211.977 simulated seconds and 2.42, 2.44 and 2.44 CPU seconds. It is the team's current best and selected final entry. [Official v7 result](docs/official-practice-v7-2026-11-21.json).
 
-The previous entry `5887d18` scored 471.7 seconds with one missed commit and 300 penalty seconds per run. The new total improves by **223.3 seconds (47.34%)**. Its non-penalty simulated time increases from 168.450 to 245.407 seconds, so recovering excess coverage remains useful. This is a practice result, not a guarantee for the unseen final. [Official result](docs/official-practice-v6-2026-11-21.json).
+Compared with v6 (`ccec7a6`, 248.4 seconds, also zero-miss), the total decreases by **34.0 seconds (13.69%)**, including **33.430 seconds** less simulated CI time. The original `5887d18` scored 471.7 seconds with one missed commit and 300 penalty seconds per run. Its hypothetical penalty-free total is about 171.7 seconds, but it did not achieve that as a zero-miss entry. The current non-penalty simulated time remains 43.527 seconds above that original entry. Practice results do not guarantee unseen final performance. [Previous v6 result](docs/official-practice-v6-2026-11-21.json).
 
 ## Local optimization round v7
 
