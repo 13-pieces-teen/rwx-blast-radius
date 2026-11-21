@@ -2,6 +2,12 @@
 
 An entry for the RWX Buildathon track. For each independent SQLGlot patch, the selector identifies affected tests and chooses a worker count that minimizes recorded CI time plus worker overhead.
 
+## Official practice result
+
+Submission **BB-BA6CCCF5**, commit `5887d18e48f424245eec2d5527d15ef1d2242d79`, was scored on 2026-11-21: **471.7 seconds**. All three runs missed one commit, adding 300 seconds to each run. Each displayed simulated total was 468.45 seconds; CPU was 3.29, 3.31 and 3.28 seconds.
+
+This confirms an unresolved generalization miss despite the local sample checks below. The server does not disclose the missed patch. This is a practice result, not the final score. [Recorded official result](docs/official-practice-2026-11-21.json).
+
 ## Measured progress
 
 On the **30 public sample patches**, with the official Docker runtime restrictions:

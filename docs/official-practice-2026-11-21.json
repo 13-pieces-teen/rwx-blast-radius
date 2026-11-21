@@ -1,0 +1,35 @@
+{
+  "observed_date": "2026-11-21",
+  "timezone": "Asia/Shanghai",
+  "track": "RWX - Blast Radius",
+  "team": "13",
+  "submission_id": "BB-BA6CCCF5",
+  "status": "Scored",
+  "repository": "https://github.com/13-pieces-teen/rwx-blast-radius",
+  "commit": "5887d18e48f424245eec2d5527d15ef1d2242d79",
+  "official_score_seconds": 471.7,
+  "runs_as_displayed": [
+    {
+      "run": 1,
+      "simulated_seconds": 468.45,
+      "cpu_seconds": 3.29,
+      "missed_commits": 1
+    },
+    {
+      "run": 2,
+      "simulated_seconds": 468.45,
+      "cpu_seconds": 3.31,
+      "missed_commits": 1
+    },
+    {
+      "run": 3,
+      "simulated_seconds": 468.45,
+      "cpu_seconds": 3.28,
+      "missed_commits": 1
+    }
+  ],
+  "penalty_per_missed_commit_seconds": 300,
+  "final_selection_as_observed": "Entered in the final (your best score)",
+  "source": "https://www.joinbuilders.org/buildathon/tracks/blast-radius",
+  "limits": "Official practice batch; not a final score. Displayed run values are rounded. The failing commit is not disclosed."
+}
