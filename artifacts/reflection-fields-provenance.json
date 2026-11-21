@@ -1,0 +1,13 @@
+{
+  "source_commit": "eb11aec4be8cb2122afe713a4816662c3f0fb2fa",
+  "baseline_map_sha256": "9486dca37299ac982048ac0ed6f6061e292ae0ffae86f05658e48f721596d341",
+  "profile_sha256": "e6a0e6181aecefb5ee07682cab444a01705efa62d6bb8b71a055f8907c86e905",
+  "generator_sha256": "515325d3c78461a85bf67c1a5344e43c0fdb997cccfacc4d4a8401e6e3f74299",
+  "collected_tests": 1621,
+  "code_objects": 1682,
+  "compressed_bytes": 45868,
+  "test_result": "1620 passed, 1 skipped, 25440 subtests passed",
+  "raw_trace_seconds": 132.1,
+  "python_image": "python:3.13-slim@sha256:e48f59cdba69a3cbd9ed2cf0f348d90d45a8d350d98134cf1070bc106ee9ed90",
+  "provenance": "Original pinned tests; actual code-object field reads in tests and Python inspect; no patches"
+}

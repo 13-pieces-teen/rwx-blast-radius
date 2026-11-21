@@ -1,0 +1,13 @@
+{
+  "source_commit": "eb11aec4be8cb2122afe713a4816662c3f0fb2fa",
+  "collected_tests": 1621,
+  "covered_files": 250,
+  "covered_lines": 79537,
+  "read_dependencies": 81,
+  "symbols": 1217,
+  "attributes": 3077,
+  "instrumented_failures": [],
+  "compressed_bytes": 669843,
+  "sha256": "9486dca37299ac982048ac0ed6f6061e292ae0ffae86f05658e48f721596d341",
+  "generation": "Unmodified pinned source only; per-test coverage, process-pool tasks including pickle round trips, file reads, expression/dialect usage, optional observed class-attribute reads"
+}

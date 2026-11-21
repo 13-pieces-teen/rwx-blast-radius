@@ -1,0 +1,13 @@
+{
+  "source_commit": "eb11aec4be8cb2122afe713a4816662c3f0fb2fa",
+  "baseline_map_sha256": "9486dca37299ac982048ac0ed6f6061e292ae0ffae86f05658e48f721596d341",
+  "profile_sha256": "2c01b70b53d2fe525a8e625b986f79abb930d7707cf13311051b0c3fa5a73deb",
+  "generator_sha256": "200c2b02f17f547c41b7a54683b307ac0d8ca7fe56d2bd0755b6fc14c6373a14",
+  "collected_tests": 1621,
+  "types": 1067,
+  "sites": 663,
+  "test_result": "1620 passed, 1 skipped, 25440 subtests passed",
+  "raw_trace_seconds": 169.6,
+  "python_image": "python:3.13-slim@sha256:e48f59cdba69a3cbd9ed2cf0f348d90d45a8d350d98134cf1070bc106ee9ed90",
+  "provenance": "Untouched pinned tests; observed operand types and enum metadata only; no alternative operator evaluated"
+}
