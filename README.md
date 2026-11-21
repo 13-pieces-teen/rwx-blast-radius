@@ -4,13 +4,15 @@ An entry for the RWX Buildathon track. For each independent SQLGlot patch, the s
 
 ## Official practice result
 
+Latest experiment **v9**, submission **BB-01EBCC2B**, commit `3e6caf7243e6ad4370fca9359447174687804e84`, scored **218.3 seconds** with zero missed commits in all three runs. Simulated time fell only 0.373 seconds to 211.604, while CPU rose to 6.66 / 6.65 / 7.10 seconds. It is **4.0 seconds slower** than v8, which remains the best and selected final entry. [Official v9 result](docs/official-practice-v9-2026-11-21.json).
+
 Submission **BB-CB9A4CE9**, commit `66f69cfd271296ba6055731b1b79fe5b6a649914`, was scored on 2026-11-21: **214.3 seconds**. All three runs missed **zero commits**; each had 211.977 simulated seconds and 2.36, 2.34 and 2.37 CPU seconds. It is the team's current best and selected final entry. [Official v8 result](docs/official-practice-v8-2026-11-21.json).
 
 V7 reduced the zero-miss v6 score from 248.4 to 214.4 seconds, including **33.430 seconds** less simulated CI time. V8 lowers the displayed total another **0.1 second**, with unchanged simulated CI time. The original `5887d18` scored 471.7 seconds with one missed commit and 300 penalty seconds per run. Its hypothetical penalty-free total is about 171.7 seconds, but it did not achieve that as a zero-miss entry. The current non-penalty simulated time remains 43.527 seconds above that original entry. Practice results do not guarantee unseen final performance. [Previous v7 result](docs/official-practice-v7-2026-11-21.json) · [v6 result](docs/official-practice-v6-2026-11-21.json).
 
 ## Local optimization round v9
 
-The current Docker entrypoint is a **prefix observation practice candidate**. It packages a separately validated experiment while retaining the v8 base selector. Its local gains are distribution-dependent and its canonical-order assumption remains a limitation; it has no official score recorded yet. [V9 evidence and limits](docs/local-optimization-v9.md).
+The current Docker entrypoint is the **prefix observation practice experiment**. It packages a separately validated experiment while retaining the v8 base selector. Its official score is 218.3 seconds, slower than v8; its local gains are distribution-dependent and its canonical-order assumption remains a limitation. [V9 evidence and limits](docs/local-optimization-v9.md).
 
 ## Local optimization round v8
 

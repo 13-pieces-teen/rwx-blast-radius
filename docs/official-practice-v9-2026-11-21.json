@@ -1,0 +1,29 @@
+{
+  "observed_date": "2026-11-21",
+  "timezone": "Asia/Shanghai",
+  "track": "RWX - Blast Radius",
+  "team": "13",
+  "submission_id": "BB-01EBCC2B",
+  "status": "Scored",
+  "repository": "https://github.com/13-pieces-teen/rwx-blast-radius",
+  "commit": "3e6caf7243e6ad4370fca9359447174687804e84",
+  "policy": "prefix observation experiment",
+  "official_score_seconds": 218.3,
+  "runs_as_displayed": [
+    {"run": 1, "simulated_seconds": 211.604, "cpu_seconds": 6.66, "missed_commits": 0},
+    {"run": 2, "simulated_seconds": 211.604, "cpu_seconds": 6.65, "missed_commits": 0},
+    {"run": 3, "simulated_seconds": 211.604, "cpu_seconds": 7.10, "missed_commits": 0}
+  ],
+  "penalty_per_missed_commit_seconds": 300,
+  "previous_best_submission": "BB-CB9A4CE9",
+  "previous_best_commit": "66f69cfd271296ba6055731b1b79fe5b6a649914",
+  "previous_best_score_seconds": 214.3,
+  "displayed_score_regression_seconds": 4.0,
+  "nonpenalty_simulated_reduction_seconds": 0.373,
+  "median_cpu_increase_from_displayed_values_seconds": 4.30,
+  "final_selection_as_observed": "V8 remains entered in the final as the best score; v9 displays Pick as our final entry and was not manually selected",
+  "source": "https://www.joinbuilders.org/buildathon/tracks/blast-radius",
+  "local_preflight_report": "evaluation/official-v9-preflight/report.json",
+  "local_screenshot": "evaluation/official-v9-preflight/official-score-detail.jpg",
+  "limits": "Official practice result, not the unseen final. All three runs had zero missed commits. Hidden per-patch selections and costs remain undisclosed. Displayed CPU and total scores are rounded. The 0.373-second simulated saving was outweighed by extra analysis CPU; this practice batch did not reproduce the larger local cohort gains."
+}
