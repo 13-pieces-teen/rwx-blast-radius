@@ -4,15 +4,15 @@ An entry for the RWX Buildathon track. For each independent SQLGlot patch, the s
 
 ## Official practice result
 
-Submission **BB-BA6CCCF5**, commit `5887d18e48f424245eec2d5527d15ef1d2242d79`, was scored on 2026-11-21: **471.7 seconds**. All three runs missed one commit, adding 300 seconds to each run. Each displayed simulated total was 468.45 seconds; CPU was 3.29, 3.31 and 3.28 seconds.
+Submission **BB-CB13EEB5**, commit `ccec7a6b43f68af122aa53e1d9558a053ea05b41`, was scored on 2026-11-21: **248.4 seconds**. All three runs missed **zero commits**; each had 245.407 simulated seconds and 2.99, 2.97 and 2.97 CPU seconds. It is the team's current best and selected final entry.
 
-This confirms an unresolved generalization miss despite the local sample checks below. The server does not disclose the missed patch. This is a practice result, not the final score. [Recorded official result](docs/official-practice-2026-11-21.json).
+The previous entry `5887d18` scored 471.7 seconds with one missed commit and 300 penalty seconds per run. The new total improves by **223.3 seconds (47.34%)**. Its non-penalty simulated time increases from 168.450 to 245.407 seconds, so recovering excess coverage remains useful. This is a practice result, not a guarantee for the unseen final. [Official result](docs/official-practice-v6-2026-11-21.json).
 
 ## Local robustness round v6
 
 Class-shared fixture reads and values imported by alias exposed two further omission mechanisms. The collector now wraps class fixtures before pytest captures them, and module declaration changes retain indirect consumers, including EOF insertions. Namespace observations safely distinguish individual mapping keys while preserving opaque consumers and derived class state.
 
-The public sample remains zero-miss in all three constrained runs: **127.083 simulated seconds**, **128.908 seconds CPU-inclusive median** (v5: 130.441). Eight targeted namespace mutations passed all **12,478 omitted tests**; the class-fixture counterexample passed another **1,559**. All **93 regression checks** passed, and final selections preserve 28 completed validation records. These local results do not identify or prove removal of the undisclosed official miss. [Results, provenance and limits](docs/local-optimization-v6.md).
+The public sample remains zero-miss in all three constrained runs: **127.083 simulated seconds**, **128.908 seconds CPU-inclusive median** (v5: 130.441). Eight targeted namespace mutations passed all **12,478 omitted tests**; the class-fixture counterexample passed another **1,559**. All **93 regression checks** passed, and final selections preserve 28 completed validation records. These local results remain separate from the subsequent zero-miss official practice result above; the old missed patch itself is not disclosed. [Results, provenance and limits](docs/local-optimization-v6.md).
 
 ## Local robustness round v5
 

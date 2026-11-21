@@ -1,0 +1,43 @@
+{
+  "observed_date": "2026-11-21",
+  "timezone": "Asia/Shanghai",
+  "track": "RWX - Blast Radius",
+  "team": "13",
+  "submission_id": "BB-CB13EEB5",
+  "status": "Scored",
+  "repository": "https://github.com/13-pieces-teen/rwx-blast-radius",
+  "commit": "ccec7a6b43f68af122aa53e1d9558a053ea05b41",
+  "official_score_seconds": 248.4,
+  "runs_as_displayed": [
+    {
+      "run": 1,
+      "simulated_seconds": 245.407,
+      "cpu_seconds": 2.99,
+      "missed_commits": 0
+    },
+    {
+      "run": 2,
+      "simulated_seconds": 245.407,
+      "cpu_seconds": 2.97,
+      "missed_commits": 0
+    },
+    {
+      "run": 3,
+      "simulated_seconds": 245.407,
+      "cpu_seconds": 2.97,
+      "missed_commits": 0
+    }
+  ],
+  "penalty_per_missed_commit_seconds": 300,
+  "final_selection_as_observed": "Entered in the final (your best score)",
+  "source": "https://www.joinbuilders.org/buildathon/tracks/blast-radius",
+  "previous_submission": "BB-BA6CCCF5",
+  "previous_commit": "5887d18e48f424245eec2d5527d15ef1d2242d79",
+  "previous_official_score_seconds": 471.7,
+  "score_improvement_seconds": 223.3,
+  "score_reduction_percent": 47.339411,
+  "previous_nonpenalty_simulated_seconds": 168.45,
+  "current_nonpenalty_simulated_seconds": 245.407,
+  "nonpenalty_simulated_increase_seconds": 76.957,
+  "limits": "Official practice batch, not the unseen final. Three zero-miss runs establish no penalty in this practice evaluation; the hidden missed patch from the earlier entry is not disclosed. Displayed CPU values are rounded."
+}
