@@ -1,0 +1,52 @@
+{
+  "modes": [
+    "cold",
+    "eager-import-collection",
+    "warm"
+  ],
+  "tests": 1621,
+  "runs": [
+    {
+      "mode": "warm",
+      "complete": true,
+      "collected_tests": 1621,
+      "generator_hashes": {
+        "build_maps.py": "877ae4dfbc25902c828f6787ae5185aab42aac82989ac01cb484212ead4b2c7e",
+        "build_namespace_profile.py": "b48f9362cf4e6a1ff2ee964c39da7e70dbfbab368cd229741c54fea84403417b",
+        "namespace_reads.py": "2c672c8fe05e35617f5e8742c421a78b14de037bbc3ff6c12853e9ba067d5400"
+      }
+    },
+    {
+      "mode": "cold",
+      "complete": true,
+      "collected_tests": 1621,
+      "generator_hashes": {
+        "build_maps.py": "877ae4dfbc25902c828f6787ae5185aab42aac82989ac01cb484212ead4b2c7e",
+        "build_namespace_profile.py": "b48f9362cf4e6a1ff2ee964c39da7e70dbfbab368cd229741c54fea84403417b",
+        "namespace_reads.py": "2c672c8fe05e35617f5e8742c421a78b14de037bbc3ff6c12853e9ba067d5400"
+      }
+    },
+    {
+      "mode": "eager-import-collection",
+      "complete": true,
+      "collected_tests": 1621,
+      "generator_hashes": {
+        "build_maps.py": "877ae4dfbc25902c828f6787ae5185aab42aac82989ac01cb484212ead4b2c7e",
+        "build_namespace_profile.py": "b48f9362cf4e6a1ff2ee964c39da7e70dbfbab368cd229741c54fea84403417b",
+        "namespace_reads.py": "2c672c8fe05e35617f5e8742c421a78b14de037bbc3ff6c12853e9ba067d5400"
+      }
+    }
+  ],
+  "input_sha256": [
+    "a5d33a88f4a020d609be85cb76e40c320e2db9294ccee54efe36d61848fdee79",
+    "6fc9f06948e71e2964d05a4a1a6dad481317ad8734ecc9eed07af6168e1883a7",
+    "180d2042577d42975fdd8896358c5ad522c6c620580aa2d25b236f85cc427dc3"
+  ],
+  "merge_generator_sha256": "8528d0a99da266093c57ad36d83de3279c32d839770ae36a1bcc68a58cad6c91",
+  "sites": {
+    "all": 76,
+    "opaque": 41,
+    "fields": 245
+  },
+  "sha256": "9827ce5afc31e086d9dedb51b317e3e2e5ac81cd06ba2ca11a464558c7769b33"
+}

@@ -41,10 +41,18 @@ def main():
     (destination / "provenance.json").write_text(json.dumps({
         "selector_sha256": hashlib.sha256((ROOT / "selector.py").read_bytes()).hexdigest(),
         "map_sha256": hashlib.sha256(maps.read_bytes()).hexdigest(),
+        "profiles_sha256": {path.name: hashlib.sha256(path.read_bytes()).hexdigest()
+                            for path in sorted(maps.parent.glob("*.json.gz"))},
         "type_profiles_sha256": (hashlib.sha256((maps.parent / "type-profiles.json.gz").read_bytes()).hexdigest()
                                   if (maps.parent / "type-profiles.json.gz").exists() else None),
         "reflection_fields_sha256": (hashlib.sha256((maps.parent / "reflection-fields.json.gz").read_bytes()).hexdigest()
                                      if (maps.parent / "reflection-fields.json.gz").exists() else None),
+        "collection_profile_sha256": (hashlib.sha256((maps.parent / "collection-profile.json.gz").read_bytes()).hexdigest()
+                                      if (maps.parent / "collection-profile.json.gz").exists() else None),
+        "class_dict_readers_sha256": (hashlib.sha256((maps.parent / "class-dict-readers.json.gz").read_bytes()).hexdigest()
+                                     if (maps.parent / "class-dict-readers.json.gz").exists() else None),
+        "lambda_call_readers_sha256": (hashlib.sha256((maps.parent / "lambda-call-readers.json.gz").read_bytes()).hexdigest()
+                                      if (maps.parent / "lambda-call-readers.json.gz").exists() else None),
         "source_commit": "eb11aec4be8cb2122afe713a4816662c3f0fb2fa",
         "mode": "Execute every omitted test; stop at first counterexample per mutation",
     }, indent=2) + "\n")

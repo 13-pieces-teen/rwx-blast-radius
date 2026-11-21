@@ -1,13 +1,39 @@
 {
   "source_commit": "eb11aec4be8cb2122afe713a4816662c3f0fb2fa",
-  "baseline_map_sha256": "9486dca37299ac982048ac0ed6f6061e292ae0ffae86f05658e48f721596d341",
-  "profile_sha256": "2c01b70b53d2fe525a8e625b986f79abb930d7707cf13311051b0c3fa5a73deb",
-  "generator_sha256": "200c2b02f17f547c41b7a54683b307ac0d8ca7fe56d2bd0755b6fc14c6373a14",
   "collected_tests": 1621,
-  "types": 1067,
-  "sites": 663,
-  "test_result": "1620 passed, 1 skipped, 25440 subtests passed",
-  "raw_trace_seconds": 169.6,
-  "python_image": "python:3.13-slim@sha256:e48f59cdba69a3cbd9ed2cf0f348d90d45a8d350d98134cf1070bc106ee9ed90",
-  "provenance": "Untouched pinned tests; observed operand types and enum metadata only; no alternative operator evaluated"
+  "complete": true,
+  "modes": [
+    "warm",
+    "cold"
+  ],
+  "sites": [
+    663,
+    663,
+    663
+  ],
+  "types": [
+    1067,
+    1067,
+    2134
+  ],
+  "accepted_sites": [
+    313,
+    313,
+    313
+  ],
+  "lost_acceptance": [],
+  "new_acceptance": [],
+  "sha256": {
+    "artifacts\\type-profiles.json.gz": "2c01b70b53d2fe525a8e625b986f79abb930d7707cf13311051b0c3fa5a73deb",
+    "evaluation\\candidate-types-v5\\raw-cold\\type-profiles.json.gz": "6bd83a3c4c330b1af0dac46affcb6d9f9527fb27081c0a1c01de4d94a0ab5bf2",
+    "evaluation\\candidate-types-v5\\type-profiles.json.gz": "6a89b69ef7468166f0950ac30a616e6fa1bd59a4387bfced57fb8863a31397d4"
+  },
+  "generators_sha256": {
+    "tools\\build_type_profiles.py": "cc2488ab422a21549191d2cd7f903f35db23fdd3b0135e13c1ce97220d8133fa",
+    "tools\\build_maps.py": "c72a03115ad84bfb9416d90581dc7a4765bb972c97394bad6a4669bc8f9294ad",
+    "tools\\merge_type_profiles.py": "dc668c050973a7b3f5b14f524973d440464430461bc2f970f621d7af296e91a6"
+  },
+  "profile_sha256": "6a89b69ef7468166f0950ac30a616e6fa1bd59a4387bfced57fb8863a31397d4",
+  "test_result": "Cold: 1620 passed, 1 skipped, 25440 subtests passed; union retains original warm observations",
+  "baseline_map_sha256": "8588bead2f8f7c3be2288a9c61e5da907c2024faba3c0a59a55650a525da8f4c"
 }

@@ -2,12 +2,279 @@
   "source_commit": "eb11aec4be8cb2122afe713a4816662c3f0fb2fa",
   "collected_tests": 1621,
   "covered_files": 250,
-  "covered_lines": 79537,
+  "covered_lines": 84694,
   "read_dependencies": 81,
-  "symbols": 1217,
+  "symbols": 1240,
   "attributes": 3077,
+  "cold_caches": true,
+  "union_inputs": [
+    {
+      "sha256": "eddd0fe56605b58ed063d65680afba9dc083fc8756ba2c49101fe0833f273c1b",
+      "provenance": {
+        "source_commit": "eb11aec4be8cb2122afe713a4816662c3f0fb2fa",
+        "collected_tests": 1621,
+        "covered_files": 250,
+        "covered_lines": 81105,
+        "read_dependencies": 81,
+        "symbols": 1238,
+        "attributes": 3077,
+        "cold_caches": false,
+        "union_inputs": [
+          {
+            "sha256": "9486dca37299ac982048ac0ed6f6061e292ae0ffae86f05658e48f721596d341"
+          }
+        ],
+        "generator_hashes": {},
+        "recoveries": [
+          {
+            "reason": "Full-suite tracing exceeded 300s in TPC-DS; isolated test passed at 900s limit. Replace failed-test file-read contexts with passing retrace to remove pytest source-diagnostic pollution.",
+            "original_failures": [
+              {
+                "id": "tests/test_optimizer.py::TestOptimizer::test_tpcds",
+                "when": "call",
+                "outcome": "failed",
+                "seconds": 0
+              }
+            ],
+            "base_observations_sha256": "fdcd15bb5c3e30d2e788994dd824f6874f771cadcfe67e1e15cd0dd4b0e63bc3",
+            "retry_observations_sha256": "39aa8c4f60ed7db56c2744b0218163d93b438e00474676c86693c62cb329fa8a",
+            "retry_generator_hashes": {
+              "build_maps.py": "883d503dd354cf1364356ed3cc855bd5aa894acbecee7c19c17ad65192484a22",
+              "attribute_reads.py": "28d2041adb24d8abf20382811e0acbae84a2669d975e05a8494cf820879f49ef"
+            },
+            "retry_tests": [
+              "tests/test_optimizer.py::TestOptimizer::test_tpcds"
+            ],
+            "read_recovery": "Retried test file reads replaced by successful observations; failed-run diagnostic reads excluded. Other dependency categories remain unioned.",
+            "excluded_failed_read_edges": [
+              {
+                "path": "sqlglot/helper.py",
+                "context": "tests/test_optimizer.py::TestOptimizer::test_tpcds"
+              },
+              {
+                "path": "sqlglot/expressions/builders.py",
+                "context": "tests/test_optimizer.py::TestOptimizer::test_tpcds"
+              },
+              {
+                "path": "sqlglot/optimizer/normalize.py",
+                "context": "tests/test_optimizer.py::TestOptimizer::test_tpcds"
+              },
+              {
+                "path": "sqlglot/optimizer/optimizer.py",
+                "context": "tests/test_optimizer.py::TestOptimizer::test_tpcds"
+              },
+              {
+                "path": "sqlglot/optimizer/scope.py",
+                "context": "tests/test_optimizer.py::TestOptimizer::test_tpcds"
+              },
+              {
+                "path": "tests/test_optimizer.py",
+                "context": "tests/test_optimizer.py::TestOptimizer::test_tpcds"
+              },
+              {
+                "path": "source",
+                "context": "tests/test_optimizer.py::TestOptimizer::test_tpcds"
+              }
+            ]
+          }
+        ],
+        "collection_reads_note": "Legacy observer scanned Python sources with audit enabled; Python collection reads excluded. Use the clean eager-import profile for these dependencies.",
+        "restricted_attribute_keys": true,
+        "instrumented_failures": [],
+        "compressed_bytes": 694192,
+        "sha256": "eddd0fe56605b58ed063d65680afba9dc083fc8756ba2c49101fe0833f273c1b",
+        "generation": "Unmodified pinned source only; per-test coverage, process-pool tasks including pickle round trips, file reads, expression/dialect usage, optional observed class-attribute reads"
+      }
+    }
+  ],
+  "generator_hashes": {},
+  "recoveries": [
+    {
+      "reason": "Full-suite traced memory assertion failed for Spark2; isolated test passed. Replace failed-test file-read contexts with passing retrace to remove pytest source-diagnostic pollution; other edges remain unioned.",
+      "original_failures": [
+        {
+          "id": "tests/test_generator.py::TestGenerator::test_generator_memory",
+          "when": "call",
+          "outcome": "failed",
+          "seconds": 0
+        }
+      ],
+      "base_observations_sha256": "0d18023c9073cc6184721731cb4674fa54ad9891554544cfa7e289c03405f492",
+      "retry_observations_sha256": "bb5e52c483fed4d53d3dc0cc7bf099e8095f0837bcc2861d5f77ab021983546e",
+      "retry_generator_hashes": {
+        "build_maps.py": "883d503dd354cf1364356ed3cc855bd5aa894acbecee7c19c17ad65192484a22",
+        "attribute_reads.py": "28d2041adb24d8abf20382811e0acbae84a2669d975e05a8494cf820879f49ef"
+      },
+      "retry_tests": [
+        "tests/test_generator.py::TestGenerator::test_generator_memory"
+      ],
+      "read_recovery": "Retried test file reads replaced by successful observations; failed-run diagnostic reads excluded. Other dependency categories remain unioned.",
+      "excluded_failed_read_edges": [
+        {
+          "path": "tests/test_generator.py",
+          "context": "tests/test_generator.py::TestGenerator::test_generator_memory"
+        }
+      ]
+    }
+  ],
+  "collection_reads_note": "Legacy observer scanned Python sources with audit enabled; Python collection reads excluded. Use the clean eager-import profile for these dependencies.",
+  "restricted_attribute_keys": true,
   "instrumented_failures": [],
-  "compressed_bytes": 669843,
-  "sha256": "9486dca37299ac982048ac0ed6f6061e292ae0ffae86f05658e48f721596d341",
-  "generation": "Unmodified pinned source only; per-test coverage, process-pool tasks including pickle round trips, file reads, expression/dialect usage, optional observed class-attribute reads"
+  "compressed_bytes": 730034,
+  "sha256": "085e04016f605bfca0b3db71a1e81f0d5d8afaf6d8761e7cb4129ccc656caf62",
+  "generation": "Unmodified pinned source only; per-test coverage, process-pool tasks including pickle round trips, file reads, expression/dialect usage, optional observed class-attribute reads",
+  "pre_import_map_sha256": "373550db7f018aa4e4109bbb201efc30cf4c11fd1dfa051fe07915ad4b312ef9",
+  "import_supplement": "import-provenance.json",
+  "previous_stage": {
+    "source_commit": "eb11aec4be8cb2122afe713a4816662c3f0fb2fa",
+    "collected_tests": 1621,
+    "covered_files": 250,
+    "covered_lines": 84694,
+    "read_dependencies": 81,
+    "symbols": 1240,
+    "attributes": 3077,
+    "cold_caches": true,
+    "union_inputs": [
+      {
+        "sha256": "eddd0fe56605b58ed063d65680afba9dc083fc8756ba2c49101fe0833f273c1b",
+        "provenance": {
+          "source_commit": "eb11aec4be8cb2122afe713a4816662c3f0fb2fa",
+          "collected_tests": 1621,
+          "covered_files": 250,
+          "covered_lines": 81105,
+          "read_dependencies": 81,
+          "symbols": 1238,
+          "attributes": 3077,
+          "cold_caches": false,
+          "union_inputs": [
+            {
+              "sha256": "9486dca37299ac982048ac0ed6f6061e292ae0ffae86f05658e48f721596d341"
+            }
+          ],
+          "generator_hashes": {},
+          "recoveries": [
+            {
+              "reason": "Full-suite tracing exceeded 300s in TPC-DS; isolated test passed at 900s limit. Replace failed-test file-read contexts with passing retrace to remove pytest source-diagnostic pollution.",
+              "original_failures": [
+                {
+                  "id": "tests/test_optimizer.py::TestOptimizer::test_tpcds",
+                  "when": "call",
+                  "outcome": "failed",
+                  "seconds": 0
+                }
+              ],
+              "base_observations_sha256": "fdcd15bb5c3e30d2e788994dd824f6874f771cadcfe67e1e15cd0dd4b0e63bc3",
+              "retry_observations_sha256": "39aa8c4f60ed7db56c2744b0218163d93b438e00474676c86693c62cb329fa8a",
+              "retry_generator_hashes": {
+                "build_maps.py": "883d503dd354cf1364356ed3cc855bd5aa894acbecee7c19c17ad65192484a22",
+                "attribute_reads.py": "28d2041adb24d8abf20382811e0acbae84a2669d975e05a8494cf820879f49ef"
+              },
+              "retry_tests": [
+                "tests/test_optimizer.py::TestOptimizer::test_tpcds"
+              ],
+              "read_recovery": "Retried test file reads replaced by successful observations; failed-run diagnostic reads excluded. Other dependency categories remain unioned.",
+              "excluded_failed_read_edges": [
+                {
+                  "path": "sqlglot/helper.py",
+                  "context": "tests/test_optimizer.py::TestOptimizer::test_tpcds"
+                },
+                {
+                  "path": "sqlglot/expressions/builders.py",
+                  "context": "tests/test_optimizer.py::TestOptimizer::test_tpcds"
+                },
+                {
+                  "path": "sqlglot/optimizer/normalize.py",
+                  "context": "tests/test_optimizer.py::TestOptimizer::test_tpcds"
+                },
+                {
+                  "path": "sqlglot/optimizer/optimizer.py",
+                  "context": "tests/test_optimizer.py::TestOptimizer::test_tpcds"
+                },
+                {
+                  "path": "sqlglot/optimizer/scope.py",
+                  "context": "tests/test_optimizer.py::TestOptimizer::test_tpcds"
+                },
+                {
+                  "path": "tests/test_optimizer.py",
+                  "context": "tests/test_optimizer.py::TestOptimizer::test_tpcds"
+                },
+                {
+                  "path": "source",
+                  "context": "tests/test_optimizer.py::TestOptimizer::test_tpcds"
+                }
+              ]
+            }
+          ],
+          "collection_reads_note": "Legacy observer scanned Python sources with audit enabled; Python collection reads excluded. Use the clean eager-import profile for these dependencies.",
+          "restricted_attribute_keys": true,
+          "instrumented_failures": [],
+          "compressed_bytes": 694192,
+          "sha256": "eddd0fe56605b58ed063d65680afba9dc083fc8756ba2c49101fe0833f273c1b",
+          "generation": "Unmodified pinned source only; per-test coverage, process-pool tasks including pickle round trips, file reads, expression/dialect usage, optional observed class-attribute reads"
+        }
+      }
+    ],
+    "generator_hashes": {},
+    "recoveries": [
+      {
+        "reason": "Full-suite traced memory assertion failed for Spark2; isolated test passed. Replace failed-test file-read contexts with passing retrace to remove pytest source-diagnostic pollution; other edges remain unioned.",
+        "original_failures": [
+          {
+            "id": "tests/test_generator.py::TestGenerator::test_generator_memory",
+            "when": "call",
+            "outcome": "failed",
+            "seconds": 0
+          }
+        ],
+        "base_observations_sha256": "0d18023c9073cc6184721731cb4674fa54ad9891554544cfa7e289c03405f492",
+        "retry_observations_sha256": "bb5e52c483fed4d53d3dc0cc7bf099e8095f0837bcc2861d5f77ab021983546e",
+        "retry_generator_hashes": {
+          "build_maps.py": "883d503dd354cf1364356ed3cc855bd5aa894acbecee7c19c17ad65192484a22",
+          "attribute_reads.py": "28d2041adb24d8abf20382811e0acbae84a2669d975e05a8494cf820879f49ef"
+        },
+        "retry_tests": [
+          "tests/test_generator.py::TestGenerator::test_generator_memory"
+        ],
+        "read_recovery": "Retried test file reads replaced by successful observations; failed-run diagnostic reads excluded. Other dependency categories remain unioned.",
+        "excluded_failed_read_edges": [
+          {
+            "path": "tests/test_generator.py",
+            "context": "tests/test_generator.py::TestGenerator::test_generator_memory"
+          }
+        ]
+      }
+    ],
+    "collection_reads_note": "Legacy observer scanned Python sources with audit enabled; Python collection reads excluded. Use the clean eager-import profile for these dependencies.",
+    "restricted_attribute_keys": true,
+    "instrumented_failures": [],
+    "compressed_bytes": 730033,
+    "sha256": "8588bead2f8f7c3be2288a9c61e5da907c2024faba3c0a59a55650a525da8f4c",
+    "generation": "Unmodified pinned source only; per-test coverage, process-pool tasks including pickle round trips, file reads, expression/dialect usage, optional observed class-attribute reads",
+    "pre_import_map_sha256": "373550db7f018aa4e4109bbb201efc30cf4c11fd1dfa051fe07915ad4b312ef9",
+    "import_supplement": "import-provenance.json"
+  },
+  "class_setup_supplement": {
+    "source_commit": "eb11aec4be8cb2122afe713a4816662c3f0fb2fa",
+    "ids": 1621,
+    "profile_sha256": "35381a5cdd49db837e28a22dc1c6b8ba67e6e3b28ee8404cf9e260b29f49f60e",
+    "input_sha256": {
+      "baseline-map.json.gz": "8588bead2f8f7c3be2288a9c61e5da907c2024faba3c0a59a55650a525da8f4c",
+      "class-dict-readers.json.gz": "4dd171318e793307ea6e9ae7891a1f91cae3a513e31233eeaf0dcaca868ea77a",
+      "lambda-call-readers.json.gz": "375dbc2df1e5c251583c8e69129e328a52ed0d1f9b357c18ae0afaddec7cd015"
+    },
+    "outputs": {
+      "baseline-map.json.gz": "085e04016f605bfca0b3db71a1e81f0d5d8afaf6d8761e7cb4129ccc656caf62",
+      "class-dict-readers.json.gz": "6457a26700abd297a6229659d640a8bd0cb54e494f9b046c082c39e768b53cae",
+      "lambda-call-readers.json.gz": "bed4b3ad6d3d2af197f88caddc45525f81c9f9aee3849a56b822cfe8c41f4aa6"
+    },
+    "generator_sha256": "d7fd0a09fd542de4ba002fb00468a0b0b80dca182dc22957cc6d8664a8513718",
+    "sentinel_tests": [
+      "tests/test_executor.py::TestExecutor::test_table_depth_mismatch",
+      "tests/test_lineage.py::TestLineage::test_lineage_join_with_qualified_star",
+      "tests/test_optimizer.py::TestOptimizer::test_extract_meta_schema_directive",
+      "tests/test_sqlglotc.py::TestSQLGlotC::test_dry_run_preserves_obsolete_extensions"
+    ],
+    "evidence": "One cheapest baseline sentinel per source-defined class fixture; only actual setup, teardown and class-cleanup contexts; not a full-suite test run"
+  },
+  "class_fixture_limit": "Historical full traces did not activate class fixture wrappers. The supplemental four-sentinel baseline trace repairs shared fixture dependencies; it is not a replacement full-suite run."
 }

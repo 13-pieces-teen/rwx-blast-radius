@@ -1,0 +1,57 @@
+{
+  "modes": [
+    "cold",
+    "eager-import-collection",
+    "warm"
+  ],
+  "tests": 1621,
+  "sites": 1693,
+  "collection": 38,
+  "runs": [
+    {
+      "mode": "warm",
+      "complete": true,
+      "collected_tests": 1621,
+      "test_counts": {
+        "failed": 0,
+        "passed": 1620,
+        "skipped": 1
+      },
+      "generator_hashes": {
+        "build_lambda_profile.py": "19ba4877e593e82cff49237fd05657f5221eaa02f0c546ddd323de512a9ad913",
+        "build_maps.py": "b6749d374aa2557a479ff23ff4957408b7b839dfe7162a0f12bd8bbccf9e45b2"
+      }
+    },
+    {
+      "mode": "cold",
+      "complete": true,
+      "collected_tests": 1621,
+      "test_counts": {
+        "failed": 0,
+        "passed": 1620,
+        "skipped": 1
+      },
+      "generator_hashes": {
+        "build_lambda_profile.py": "19ba4877e593e82cff49237fd05657f5221eaa02f0c546ddd323de512a9ad913",
+        "build_maps.py": "b6749d374aa2557a479ff23ff4957408b7b839dfe7162a0f12bd8bbccf9e45b2"
+      }
+    },
+    {
+      "mode": "eager-import-collection",
+      "complete": true,
+      "collected_tests": 1621,
+      "test_counts": {
+        "failed": 0,
+        "passed": 0,
+        "skipped": 0
+      },
+      "generator_hashes": {
+        "build_lambda_profile.py": "19ba4877e593e82cff49237fd05657f5221eaa02f0c546ddd323de512a9ad913",
+        "build_maps.py": "b6749d374aa2557a479ff23ff4957408b7b839dfe7162a0f12bd8bbccf9e45b2"
+      }
+    }
+  ],
+  "sha256": "bed4b3ad6d3d2af197f88caddc45525f81c9f9aee3849a56b822cfe8c41f4aa6",
+  "before_class_setup_sha256": "375dbc2df1e5c251583c8e69129e328a52ed0d1f9b357c18ae0afaddec7cd015",
+  "class_setup_supplement": "class-setup-provenance.json"
+}

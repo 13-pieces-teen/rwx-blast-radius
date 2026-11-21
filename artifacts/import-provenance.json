@@ -1,0 +1,20 @@
+{
+  "source_commit": "eb11aec4be8cb2122afe713a4816662c3f0fb2fa",
+  "collected_tests": 1621,
+  "baseline_map_sha256": "373550db7f018aa4e4109bbb201efc30cf4c11fd1dfa051fe07915ad4b312ef9",
+  "import_profile_sha256": "4f8696841dcbf1363746d5b882bfae1809a677cffe2013a4c2ab23bae9bcdc86",
+  "generator_sha256": "385298feb213f4ec0be21a53f8dff78e5a427696e431f1bf215431a1ea5c2a87",
+  "input_profiles": {
+    "collection-profile.json.gz": "ce34d6f62117720a01e097525acc8be8f6dafbc44ffc7e5e70891fc6b691ede4",
+    "class-dict-readers.json.gz": "338d8d51e1c33d7b3ec9047efcadd6fc36e249a1718723343a77580568ad153e"
+  },
+  "outputs": {
+    "baseline-map.json.gz": "8588bead2f8f7c3be2288a9c61e5da907c2024faba3c0a59a55650a525da8f4c",
+    "collection-profile.json.gz": "84629d7ba9bcceaae9ef575930958629b8c213392e63a6c422426e30c5f74c6b",
+    "class-dict-readers.json.gz": "4dd171318e793307ea6e9ae7891a1f91cae3a513e31233eeaf0dcaca868ea77a"
+  },
+  "collection_attributes": 3503,
+  "collection_class_dicts": 76,
+  "import_profile_mode": "eager imports plus collect-only; no test outcomes",
+  "evidence": "Baseline eager imports and collect-only succeeded; existing per-test dependencies preserved. This supplement is not a full-suite execution."
+}

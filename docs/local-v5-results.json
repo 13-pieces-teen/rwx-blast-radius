@@ -1,0 +1,128 @@
+{
+  "date": "2026-11-21",
+  "scope": "Local only; no push, publication or official resubmission",
+  "base_commit": "5887d18e48f424245eec2d5527d15ef1d2242d79",
+  "image": "rwx-selector:v5-local",
+  "image_id": "sha256:09c13f72b5d32cec7cb583a1059d09189108d1878bcfc5b3bc9ee7263b9d3443",
+  "selector_sha256": "7a0e24e2a58749d61552472a603478567335a350ae6e2c0720eb9e0a509f7ce8",
+  "artifacts_sha256": {
+    "baseline-map.json.gz": "8588bead2f8f7c3be2288a9c61e5da907c2024faba3c0a59a55650a525da8f4c",
+    "class-dict-readers.json.gz": "4dd171318e793307ea6e9ae7891a1f91cae3a513e31233eeaf0dcaca868ea77a",
+    "collection-profile.json.gz": "84629d7ba9bcceaae9ef575930958629b8c213392e63a6c422426e30c5f74c6b",
+    "import-profile.json.gz": "4f8696841dcbf1363746d5b882bfae1809a677cffe2013a4c2ab23bae9bcdc86",
+    "lambda-call-readers.json.gz": "375dbc2df1e5c251583c8e69129e328a52ed0d1f9b357c18ae0afaddec7cd015",
+    "reflection-fields.json.gz": "e6a0e6181aecefb5ee07682cab444a01705efa62d6bb8b71a055f8907c86e905",
+    "type-profiles.json.gz": "6a89b69ef7468166f0950ac30a616e6fa1bd59a4387bfced57fb8863a31397d4"
+  },
+  "sample_runs": [
+    {
+      "ok": true,
+      "simulated_milliseconds": 128523,
+      "missed_commits": [],
+      "cpu_seconds": 2.1365979999999998,
+      "wall_seconds": 2.1561814950000553,
+      "max_rss_kb": 82616,
+      "total_seconds": 130.659598
+    },
+    {
+      "ok": true,
+      "simulated_milliseconds": 128523,
+      "missed_commits": [],
+      "cpu_seconds": 1.8540999999999999,
+      "wall_seconds": 1.8838482549999753,
+      "max_rss_kb": 83512,
+      "total_seconds": 130.37709999999998
+    },
+    {
+      "ok": true,
+      "simulated_milliseconds": 128523,
+      "missed_commits": [],
+      "cpu_seconds": 1.9181899999999998,
+      "wall_seconds": 1.9481598809998104,
+      "max_rss_kb": 83360,
+      "total_seconds": 130.44119
+    }
+  ],
+  "sample_median_total_seconds": 130.44119,
+  "sample_base_median_total_seconds": 121.810135,
+  "unit_tests_passed": 66,
+  "independent_mutations": 12,
+  "independent_omitted_tests_passed": 17298,
+  "selection_comparison": {
+    "patches": 128,
+    "narrowed": 1,
+    "changes_with_removals": [
+      {
+        "patch": "sample/commits/6ze8.patch",
+        "old": 2,
+        "new": 1,
+        "added": [],
+        "removed": [
+          "tests/dialects/test_bigquery.py::TestBigQuery::test_bit_aggs"
+        ]
+      }
+    ],
+    "validated_runs_preserved": 17
+  },
+  "diagnosed_regressions": {
+    "scope": "Four diagnosed regression counterexamples, selected after finding bugs; not an unbiased held-out score. CPU excluded. New zero misses established by completed omitted-test checks plus final selection-superset verification.",
+    "old_simulated_seconds": 1210.25,
+    "new_simulated_seconds": 81.61,
+    "rows": [
+      {
+        "id": "cache-dispatch",
+        "old_selected": 15,
+        "new_selected": 1347,
+        "old_ci_ms": 2638,
+        "new_ci_ms": 27608,
+        "old_missed": 1,
+        "new_missed": 0,
+        "witnesses": [
+          "tests/dialects/test_athena.py::TestAthena::test_create_table"
+        ]
+      },
+      {
+        "id": "dispatch-001",
+        "old_selected": 4,
+        "new_selected": 1582,
+        "old_ci_ms": 2397,
+        "new_ci_ms": 36817,
+        "old_missed": 1,
+        "new_missed": 0,
+        "witnesses": [
+          "tests/dialects/test_mysql.py::TestMySQL::test_ddl"
+        ]
+      },
+      {
+        "id": "scope-003",
+        "old_selected": 3,
+        "new_selected": 9,
+        "old_ci_ms": 2753,
+        "new_ci_ms": 5952,
+        "old_missed": 1,
+        "new_missed": 0,
+        "witnesses": [
+          "tests/dialects/test_duckdb.py::TestDuckDB::test_time"
+        ]
+      },
+      {
+        "id": "tsql-quotes",
+        "old_selected": 2,
+        "new_selected": 170,
+        "old_ci_ms": 2462,
+        "new_ci_ms": 11233,
+        "old_missed": 1,
+        "new_missed": 0,
+        "witnesses": [
+          "tests/dialects/test_clickhouse.py::TestClickhouse::test_clickhouse"
+        ]
+      }
+    ]
+  },
+  "limits": [
+    "The official missed patch is undisclosed; this local round does not establish its correction.",
+    "The four counterexamples were selected to reproduce diagnosed bugs, not to estimate unbiased performance.",
+    "One probe initially timed out; unchanged/mutant controls and the complete unchanged-limit retry passed.",
+    "Each enhanced coverage suite required one isolated passing retrace after instrumentation failure; originals and recovery provenance are retained."
+  ]
+}

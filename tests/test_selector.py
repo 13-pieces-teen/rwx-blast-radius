@@ -129,9 +129,152 @@ class SelectionTests(unittest.TestCase):
     def test_added_code_uses_enclosing_function(self):
         self.assertEqual(self.selected(self.text.replace("    return 0", "    print(a)\n    return 0")), {7, 9})
 
+    def test_replacement_can_move_execution_out_of_a_rare_branch(self):
+        self.assertEqual(self.selected(self.text.replace("        return 1", "    return 1")), {7, 9})
+
+    def test_replacement_can_move_execution_to_module_scope(self):
+        self.text = "def f(a):\n    if a:\n        raise RuntimeError()\n"
+        (self.root / "module.py").write_text(self.text)
+        self.map["lines"] = {"module.py": {"2": "1", "3": "1"}}
+        self.map["modules"] = {"module.py": "1"}
+        self.assertEqual(self.selected(self.text.replace("        raise RuntimeError()", "        pass\nraise RuntimeError()")), {7, 9})
+
+    def test_binding_in_rare_branch_affects_whole_function(self):
+        self.text = "def f(a):\n    if isinstance(a, str):\n        return 1\n    return 0\n"
+        (self.root / "module.py").write_text(self.text)
+        self.map["lines"] = {"module.py": {"2": "3", "3": "2", "4": "1"}}
+        self.assertEqual(self.selected(self.text.replace("return 1", "return (isinstance := None)")), {7, 9})
+
+    def test_lexical_change_retains_collection_consumers(self):
+        self.map["collection_lines"] = {"module.py": [5]}
+        self.assertEqual(self.selected(self.text.replace("return 1", "return (hidden := 1)")), {7, 9})
+
+    def configure_lambdas(self):
+        self.text = "class Dispatch:\n    TABLE = {\n        'a': lambda: 1,\n        'b': lambda: 2,\n    }\n"
+        (self.root / "module.py").write_text(self.text)
+        self.map["lines"] = {"module.py": {"3": "1", "4": "2"}}
+        self.map["symbols"] = {"module.py:Dispatch": "3"}
+
+    def test_lambda_body_change_keeps_precise_selection(self):
+        self.configure_lambdas()
+        # Definition-time coverage does not prove that the body was called.
+        self.map["collection_lines"] = {"module.py": [3, 4]}
+        self.assertEqual(self.selected(self.text.replace("lambda: 2", "lambda: 3")), {9})
+
+    def save_lambda_call_profile(self, readers=None, **overrides):
+        self.map["source_commit"] = "test-commit"
+        payload = {"source_commit": "test-commit", "ids": self.map["ids"], "complete": True,
+                   "source_hashes": {path: value for path, value in self.map["source_hashes"].items()
+                                     if path.startswith("sqlglot/")},
+                   "modes": ["warm", "cold", "eager-import-collection"],
+                   "failures": [], "readers": readers if readers is not None else {"module.py:4:13": "2"},
+                   "collection": []}
+        payload.update(overrides)
+        (self.root / "lambda-call-readers.json.gz").write_bytes(gzip.compress(json.dumps(payload).encode()))
+
+    def test_lambda_call_profile_excludes_definition_only_importer(self):
+        self.configure_lambdas()
+        self.map["lines"]["module.py"]["4"] = "3"
+        self.save_lambda_call_profile()
+        self.assertEqual(self.selected(self.text.replace("lambda: 2", "lambda: 3")), {9})
+        self.map["reads"]["module.py"] = "1"
+        self.assertEqual(self.selected(self.text.replace("lambda: 2", "lambda: 3")), {7, 9})
+
+    def test_lambda_call_profile_missing_site_keeps_line_coverage(self):
+        self.configure_lambdas()
+        self.map["lines"]["module.py"]["4"] = "3"
+        self.save_lambda_call_profile(readers={})
+        self.assertEqual(self.selected(self.text.replace("lambda: 2", "lambda: 3")), {7, 9})
+
+    def test_lambda_call_manifest_covers_library_not_test_files(self):
+        self.configure_lambdas()
+        self.map["lines"]["module.py"]["4"] = "3"
+        self.map["source_hashes"]["tests/test_other.py"] = "test-file-hash"
+        self.save_lambda_call_profile()
+        self.assertEqual(self.selected(self.text.replace("lambda: 2", "lambda: 3")), {9})
+
+    def test_untrustworthy_lambda_call_profile_keeps_line_coverage(self):
+        self.configure_lambdas()
+        self.map["lines"]["module.py"]["4"] = "3"
+        for key, value in [("complete", False), ("source_commit", "wrong"), ("ids", []),
+                           ("source_hashes", {"module.py": "wrong"}), ("modes", ["warm"]),
+                           ("failures", ["failed-test"])]:
+            self.save_lambda_call_profile(**{key: value})
+            self.assertEqual(self.selected(self.text.replace("lambda: 2", "lambda: 3")), {7, 9})
+
+    def test_lambda_profile_collection_call_retains_indirect_consumers(self):
+        self.configure_lambdas()
+        self.save_lambda_call_profile(collection=["module.py:4:13"])
+        self.assertEqual(self.selected(self.text.replace("lambda: 2", "lambda: 3")), {7, 9})
+
+    def test_lambda_profile_zero_call_record_is_distinct_from_missing_site(self):
+        self.configure_lambdas()
+        self.save_lambda_call_profile(readers={"module.py:4:13": "0"})
+        self.assertEqual(self.selected(self.text.replace("lambda: 2", "lambda: 3")), set())
+
+    def test_lambda_profile_unions_multiple_bodies_on_one_line(self):
+        self.text = "table = (lambda: 1, lambda: 2)\n"
+        (self.root / "module.py").write_text(self.text)
+        self.map["lines"] = {"module.py": {"1": "3"}}
+        self.save_lambda_call_profile(readers={"module.py:1:9": "1", "module.py:1:20": "2"})
+        self.assertEqual(self.selected(self.text.replace("lambda: 2", "lambda: 3")), {7, 9})
+
+    def test_multiline_factory_lambda_keeps_later_inner_callers(self):
+        self.text = "factory = lambda: (\n    lambda: 1,\n    lambda: 2,\n)[0]\n"
+        (self.root / "module.py").write_text(self.text)
+        # Test 7 calls the factory; test 9 later executes its saved result.
+        self.map["lines"] = {"module.py": {"1": "1", "2": "2", "3": "0", "4": "1"}}
+        self.save_lambda_call_profile(readers={"module.py:1:10": "1", "module.py:2:4": "2",
+                                               "module.py:3:4": "0"})
+        self.assertEqual(self.selected(self.text.replace(")[0]", ")[1]")), {7, 9})
+
+    def test_factory_lambda_keeps_later_generator_consumers(self):
+        self.text = "factory = lambda: (\n    value + 1\n    for value in range(3)\n)\n"
+        (self.root / "module.py").write_text(self.text)
+        self.map["lines"] = {"module.py": {"1": "1", "2": "2", "3": "3", "4": "1"}}
+        self.save_lambda_call_profile(readers={"module.py:1:10": "1"})
+        self.assertEqual(self.selected(self.text.replace("value + 1", "value + 2")), {7, 9})
+
+    def test_collection_lambda_call_retains_indirect_consumers(self):
+        self.configure_lambdas()
+        self.map["collection_lambda_bodies"] = {"module.py": [4]}
+        self.assertEqual(self.selected(self.text.replace("lambda: 2", "lambda: 3")), {7, 9})
+
+    def test_collection_lambda_profile_requires_matching_complete_source(self):
+        self.configure_lambdas()
+        self.map["source_commit"] = "test-commit"
+        profile = {"source_commit": "test-commit", "complete": True, "ids": self.map["ids"],
+                   "lambda_bodies": {"module.py": [4]}}
+        path = self.root / "collection-profile.json.gz"
+        path.write_bytes(gzip.compress(json.dumps(profile).encode()))
+        self.assertEqual(self.selected(self.text.replace("lambda: 2", "lambda: 3")), {7, 9})
+        for key, value in [("complete", False), ("source_commit", "wrong"), ("ids", [])]:
+            invalid = dict(profile, **{key: value})
+            path.write_bytes(gzip.compress(json.dumps(invalid).encode()))
+            self.assertEqual(self.selected(self.text.replace("lambda: 2", "lambda: 3")), {9})
+
+    def test_dispatch_key_on_lambda_line_retains_other_dispatch_users(self):
+        self.configure_lambdas()
+        self.assertEqual(self.selected(self.text.replace("'b':", "'a':")), {7, 9})
+
+    def test_lambda_default_on_body_line_is_import_checked(self):
+        self.configure_lambdas()
+        self.assertEqual(self.selected(self.text.replace("lambda: 2", "lambda a=1/0: 2")), {7, 9})
+
     def test_comments_keep_source_readers(self):
         self.map["reads"] = {"module.py": "1"}
         self.assertEqual(self.selected("# comment\n" + self.text), {7})
+
+    def test_collection_source_readers_survive_ast_equivalent_edits(self):
+        self.map["collection_reads"] = ["module.py"]
+        self.assertEqual(self.selected("# comment\n" + self.text), {7, 9})
+
+    def test_collection_fixture_read_retains_indirect_consumers(self):
+        fixture = "tests/fixtures/example.sql"
+        self.map["reads"][fixture] = "1"
+        self.map["collection_reads"] = [fixture]
+        patch = diff("SELECT 1;\n", "SELECT 2;\n", fixture)
+        self.assertEqual({t["number"] for t in self.selector().select(patch)}, {7, 9})
 
     def test_comments_do_not_hide_other_files(self):
         fixture = "tests/fixtures/example.sql"
@@ -157,6 +300,29 @@ class SelectionTests(unittest.TestCase):
         self.map["lines"] = {}
         self.assertEqual(self.selected(self.text.replace("value = 1", "value = 1 / 0")), {7, 9})
 
+    def test_module_value_can_escape_through_an_imported_alias(self):
+        self.text = "FIXTURE_DIR = 'fixtures'\n\ndef unused():\n    return FIXTURE_DIR\n"
+        (self.root / "module.py").write_text(self.text)
+        self.map["lines"] = {}
+        self.map["modules"] = {"module.py": "1"}
+        self.assertEqual(self.selected(self.text.replace("'fixtures'", "'missing'")), {7, 9})
+
+    def test_new_module_assignment_at_eof_or_in_a_gap_retains_alias_consumers(self):
+        self.text = "FIXTURE_DIR = 'fixtures'\n\n\ndef unused():\n    return FIXTURE_DIR\n"
+        (self.root / "module.py").write_text(self.text)
+        self.map["lines"] = {}
+        self.map["modules"] = {"module.py": "1"}
+        for changed in [self.text + "\nFIXTURE_DIR = 'missing'\n",
+                        self.text.replace("\n\n\n", "\n\nFIXTURE_DIR = 'missing'\n\n")]:
+            self.assertEqual(self.selected(changed), {7, 9})
+
+    def test_module_import_alias_change_retains_indirect_consumers(self):
+        self.text = "from os.path import join as build_path\n"
+        (self.root / "module.py").write_text(self.text)
+        self.map["lines"] = {}
+        self.map["modules"] = {"module.py": "1"}
+        self.assertEqual(self.selected(self.text.replace("join", "dirname")), {7, 9})
+
     def configure_class_field(self):
         self.text = "class Config:\n    FLAG: int = 1\n"
         (self.root / "module.py").write_text(self.text)
@@ -167,6 +333,147 @@ class SelectionTests(unittest.TestCase):
     def test_literal_class_field_uses_observed_readers(self):
         self.configure_class_field()
         self.assertEqual(self.selected(self.text.replace("= 1", "= 2")), {9})
+
+    def test_annotation_only_declaration_does_not_interrupt_literal_selection(self):
+        self.configure_class_field()
+        self.text = "class Config:\n    OTHER: int\n    FLAG = 1\n"
+        (self.root / "module.py").write_text(self.text)
+        self.assertEqual(self.selected(self.text.replace("= 1", "= 2")), {9})
+
+    def test_multiple_literal_fields_on_one_line_union_their_consumers(self):
+        self.configure_class_field()
+        self.text = "class Config:\n    FLAG = 1; OTHER = 1\n"
+        (self.root / "module.py").write_text(self.text)
+        self.map["attributes"] = {"module.py:Config:FLAG": "1", "module.py:Config:OTHER": "2"}
+        self.assertEqual(self.selected(self.text.replace("= 1", "= 2")), {7, 9})
+
+    def test_literal_precision_rejects_other_changes_on_the_same_line(self):
+        self.configure_class_field()
+        self.text = "def produce():\n    return 1\n\nclass Config:\n    FLAG = 1; OTHER = produce()\n"
+        (self.root / "module.py").write_text(self.text)
+        self.assertEqual(self.selected(self.text.replace("FLAG = 1; OTHER = produce()",
+                                                        "FLAG = 2; OTHER = produce() + 1")), {7, 9})
+
+    def test_literal_eval_set_call_can_resolve_to_a_shadowed_function(self):
+        self.configure_class_field()
+        self.text = "def set():\n    return 'effect'\n\nclass Config:\n    FLAG = 1\n"
+        (self.root / "module.py").write_text(self.text)
+        self.assertEqual(self.selected(self.text.replace("FLAG = 1", "FLAG = set()")), {7, 9})
+
+    def test_bare_class_field_reads_retain_derived_consumers(self):
+        for consumer in ["    DERIVED = str(FLAG)\n",
+                         "    DERIVED = {str(value): value for value in (FLAG,)}\n",
+                         "    def method(self, value=FLAG):\n        return value\n",
+                         "    @staticmethod if FLAG else classmethod\n    def method():\n        pass\n",
+                         "    class Nested(object if FLAG else int):\n        pass\n",
+                         "    class Nested(metaclass=type if FLAG else type):\n        pass\n",
+                         "    def method(self):\n        return FLAG\n"]:
+            with self.subTest(consumer=consumer):
+                self.configure_class_field()
+                self.text += consumer
+                (self.root / "module.py").write_text(self.text)
+                # Namespace precision cannot observe Python's class-local loads.
+                self.save_class_dict_profile(collection=["module.py:Config"])
+                self.save_namespace_profile()
+                selector = self.selector()
+                selected = selector.select(diff(self.text, self.text.replace("= 1", "= 2")))
+                self.assertEqual({test["number"] for test in selected}, {7, 9})
+                self.assertEqual(selector.literal_readers["module.py"], {})
+
+    def test_attribute_access_does_not_disable_field_precision(self):
+        self.configure_class_field()
+        self.text += "    def method(self):\n        return self.FLAG\n"
+        (self.root / "module.py").write_text(self.text)
+        self.assertEqual(self.selected(self.text.replace("= 1", "= 2")), {9})
+
+    def test_new_bare_class_field_dependency_disables_field_precision(self):
+        self.configure_class_field()
+        self.text += "    DERIVED = 0\n"
+        (self.root / "module.py").write_text(self.text)
+        selector = self.selector()
+        modified = self.text.replace("= 1", "= 2").replace("DERIVED = 0", "DERIVED = FLAG")
+        self.assertEqual({test["number"] for test in selector.select(diff(self.text, modified))}, {7, 9})
+        self.assertEqual(selector.literal_readers["module.py"], {})
+
+    def save_class_dict_profile(self, **overrides):
+        self.map["source_commit"] = "test-commit"
+        payload = {"source_commit": "test-commit", "ids": self.map["ids"], "complete": True,
+                   "failures": [], "readers": {"module.py:Config": "1"}, "collection": []}
+        payload.update(overrides)
+        (self.root / "class-dict-readers.json.gz").write_bytes(gzip.compress(json.dumps(payload).encode()))
+
+    def test_literal_class_field_retains_direct_dictionary_readers(self):
+        self.configure_class_field()
+        self.save_class_dict_profile()
+        self.assertEqual(self.selected(self.text.replace("= 1", "= 2")), {7, 9})
+
+    def test_collection_class_dict_blocks_field_narrowing(self):
+        self.configure_class_field()
+        self.save_class_dict_profile(readers={}, collection=["module.py:Config"])
+        self.assertEqual(self.selected(self.text.replace("= 1", "= 2")), {7, 9})
+
+    def save_namespace_profile(self, **overrides):
+        payload = {"source_commit": self.map["source_commit"], "ids": self.map["ids"],
+                   "source_hashes": self.map["source_hashes"], "complete": True, "failures": [],
+                   "modes": ["warm", "cold", "eager-import-collection"],
+                   "all": {"readers": {"module.py:Config": "1"}, "collection": ["module.py:Config"]},
+                   "opaque": {"readers": {}, "collection": []},
+                   "fields": {"readers": {"module.py:Config:OTHER": "1"}, "collection": ["module.py:Config:OTHER"]}}
+        payload.update(overrides)
+        (self.root / "namespace-readers.json.gz").write_bytes(gzip.compress(json.dumps(payload).encode()))
+
+    def test_namespace_key_reads_do_not_depend_on_other_literal_fields(self):
+        self.configure_class_field()
+        self.save_class_dict_profile(collection=["module.py:Config"])
+        self.save_namespace_profile()
+        self.assertEqual(self.selected(self.text.replace("= 1", "= 2")), {9})
+
+    def test_namespace_value_key_and_opaque_consumers_are_retained(self):
+        self.configure_class_field()
+        self.save_class_dict_profile(collection=["module.py:Config"])
+        for category, key in [("fields", "module.py:Config:FLAG"), ("opaque", "module.py:Config")]:
+            self.save_namespace_profile(**{category: {"readers": {key: "1"}, "collection": []}})
+            self.assertEqual(self.selected(self.text.replace("= 1", "= 2")), {7, 9})
+            self.save_namespace_profile(**{category: {"readers": {}, "collection": [key]}})
+            self.assertEqual(self.selected(self.text.replace("= 1", "= 2")), {7, 9})
+
+    def test_namespace_profile_cannot_remove_unobserved_historical_contexts(self):
+        self.configure_class_field()
+        self.save_class_dict_profile(collection=["module.py:Config"])
+        for all_reads in [{"readers": {}, "collection": ["module.py:Config"]},
+                          {"readers": {"module.py:Config": "1"}, "collection": []}]:
+            self.save_namespace_profile(all=all_reads)
+            self.assertEqual(self.selected(self.text.replace("= 1", "= 2")), {7, 9})
+
+    def test_namespace_profile_keeps_direct_import_time_attribute_dependency(self):
+        self.configure_class_field()
+        self.save_class_dict_profile(collection=["module.py:Config"])
+        self.save_namespace_profile()
+        self.map["collection_attributes"] = ["module.py:Config:FLAG"]
+        self.assertEqual(self.selected(self.text.replace("= 1", "= 2")), {7, 9})
+
+    def test_namespace_profile_requires_all_modes_and_matching_complete_baseline(self):
+        self.configure_class_field()
+        self.save_class_dict_profile(collection=["module.py:Config"])
+        for key, value in [("complete", False), ("failures", ["failed"]), ("ids", []),
+                           ("source_commit", "wrong"), ("source_hashes", {"other.py": "wrong"}),
+                           ("modes", ["warm", "cold"])]:
+            self.save_namespace_profile(**{key: value})
+            self.assertEqual(self.selected(self.text.replace("= 1", "= 2")), {7, 9})
+
+    def test_class_dict_readers_survive_missing_class_symbol_map(self):
+        self.configure_class_field()
+        self.map["symbols"] = {}
+        self.map["modules"] = {"module.py": "2"}
+        self.save_class_dict_profile(collection=["module.py:Config"])
+        self.assertEqual(self.selected(self.text.replace("= 1", "= 2")), {7, 9})
+
+    def test_incomplete_or_mismatched_class_dict_profile_is_ignored(self):
+        self.configure_class_field()
+        for key, value in [("complete", False), ("source_commit", "wrong"), ("ids", []),
+                           ("failures", ["test_failure"])]:
+            self.save_class_dict_profile(**{key: value})
+            self.assertEqual(self.selected(self.text.replace("= 1", "= 2")), {9})
 
     def test_collection_read_class_field_retains_indirect_consumers(self):
         self.configure_class_field()
@@ -199,6 +506,20 @@ class SelectionTests(unittest.TestCase):
         self.map["reads"] = {"module.py": "1"}
         self.save_profile()
         self.assertEqual(self.selected(self.text.replace("is None", "== None")), {7})
+
+    def test_multifile_patch_does_not_reuse_baseline_operand_proof(self):
+        self.configure_profile()
+        self.save_profile()
+        other = "def g():\n    return 1\n"
+        (self.root / "other.py").write_text(other)
+        self.map["lines"]["other.py"] = {"2": "1"}
+        patch = diff(self.text, self.text.replace("is None", "== None")) + diff(
+            other, other.replace("return 1", "return 2"), "other.py")
+        self.assertEqual({t["number"] for t in self.selector().select(patch)}, {7, 9})
+
+    def test_repeated_file_sections_fall_back_conservatively(self):
+        patch = diff(self.text, self.text.replace("return 1", "return 2"))
+        self.assertEqual({t["number"] for t in self.selector().select(patch + patch)}, {7, 9})
 
     def test_profile_rejects_missing_sites_and_custom_comparisons(self):
         self.configure_profile()

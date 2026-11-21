@@ -5,6 +5,7 @@ import argparse
 import collections
 import concurrent.futures
 import functools
+import hashlib
 import json
 import os
 import pickle
@@ -62,6 +63,9 @@ class Collector:
         self.modules = collections.defaultdict(set)
         self.results = []
         self.items = []
+        self.cold_caches = False
+        self.generator_hashes = {}
+        self.collection_reads_clean = False
         self.cov = coverage.Coverage(
             source=[str(source / "sqlglot"), str(source / "tests")],
             config_file=False, data_file=str(output / ".coverage"),
@@ -137,29 +141,46 @@ class Collector:
 
     def pytest_collection_modifyitems(self, items):
         self.items = [item.nodeid for item in items]
-        seen_classes = set()
-        for item in items:
-            cls = getattr(item, "cls", None)
-            if cls is None or cls in seen_classes or not issubclass(cls, unittest.TestCase):
+
+    @pytest.hookimpl(tryfirst=True)
+    def pytest_pycollect_makeitem(self, collector, name, obj):
+        # Pytest captures these bound methods while collecting the class.
+        # collection_modifyitems runs after that capture and is too late.
+        if not isinstance(obj, type) or not issubclass(obj, unittest.TestCase):
+            return None
+        for method_name in ("setUpClass", "tearDownClass", "doClassCleanups"):
+            bound = getattr(obj, method_name, None)
+            if bound is None:
                 continue
-            seen_classes.add(cls)
-            class_context = "@class:" + item.nodeid.rsplit("::", 1)[0]
-            for method_name in ("setUpClass", "tearDownClass"):
-                original = getattr(cls, method_name)
+            function = getattr(bound, "__func__", bound)
+            if getattr(function, "__rwx_class_fixture__", False):
+                continue
+            receives_class = hasattr(bound, "__func__")
 
-                def wrapped(c, original=original, class_context=class_context):
-                    old = self.context
-                    self.switch(class_context)
-                    try:
-                        return original()
-                    finally:
-                        self.switch(old)
+            @functools.wraps(function)
+            def wrapped(cls, function=function, receives_class=receives_class):
+                previous = self.context
+                context = (previous if previous.startswith("@class:") or "::" not in previous else
+                           "@class:" + previous.rsplit("::", 1)[0])
+                self.switch(context)
+                try:
+                    return function(cls) if receives_class else function()
+                finally:
+                    self.switch(previous)
 
-                setattr(cls, method_name, classmethod(wrapped))
+            wrapped.__rwx_class_fixture__ = True
+            setattr(obj, method_name, classmethod(wrapped))
+        return None
 
     @pytest.hookimpl(hookwrapper=True, tryfirst=True)
     def pytest_runtest_protocol(self, item, nextitem):
         self.switch(item.nodeid)
+        if self.cold_caches:
+            # Dispatch is cached across tests. A warm-only trace attributes its
+            # construction to the first consumer and misses subsequent users.
+            # A separate cold run is unioned with the normal-order trace.
+            from sqlglot.generator import _DISPATCH_CACHE
+            _DISPATCH_CACHE.clear()
         yield
         self.switch("@collection")
 
@@ -174,6 +195,9 @@ class Collector:
         self.cov.save()
         metadata = {
             "source_commit": "eb11aec4be8cb2122afe713a4816662c3f0fb2fa",
+            "cold_caches": self.cold_caches,
+            "generator_hashes": self.generator_hashes,
+            "collection_reads_clean": self.collection_reads_clean,
             "items": self.items,
             "reads": {k: sorted(v) for k, v in self.reads.items()},
             "symbols": {k: sorted(v) for k, v in self.symbols.items()},
@@ -189,20 +213,33 @@ def main():
     parser.add_argument("--source", type=Path, default=Path("/src"))
     parser.add_argument("--output", type=Path, default=Path("/maps"))
     parser.add_argument("--attributes", action="store_true")
+    parser.add_argument("--cold-caches", action="store_true")
     args, pytest_args = parser.parse_known_args()
     args.output.mkdir(parents=True, exist_ok=True)
     os.chdir(args.source)
     sys.path.insert(0, str(args.source))
     collector = Collector(args.source, args.output)
+    collector.cold_caches = args.cold_caches
+    collector.generator_hashes = {
+        name: hashlib.sha256(Path(__file__).with_name(name).read_bytes()).hexdigest()
+        for name in ("build_maps.py", "attribute_reads.py")
+    }
     collector.cov.start()
     collector.switch("@collection")
-    sys.addaudithook(collector.audit)
     if args.attributes:
         from attribute_reads import install
         install(collector)
+    # Scanning source to prepare the observer is not a program dependency.
+    collector.collection_reads_clean = True
+    sys.addaudithook(collector.audit)
     collector.instrument()
     try:
-        code = pytest.main(pytest_args or ["tests", "-q", "-p", "no:cacheprovider", "--timeout=300"],
+        # Assertion rewriting otherwise bypasses the loader observing direct
+        # metadata reads in test modules.
+        run_args = pytest_args or ["tests", "-q", "-p", "no:cacheprovider", "--timeout=900"]
+        if args.attributes:
+            run_args = ["--assert=plain", *run_args]
+        code = pytest.main(run_args,
                            plugins=[collector])
     finally:
         collector.save()

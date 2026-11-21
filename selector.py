@@ -161,6 +161,28 @@ def class_fields(tree):
     return found
 
 
+def class_field_name_reads(tree):
+    """Find class fields whose values can escape through untraced bare names.
+
+    Attribute observations do not see ``DERIVED = transform(FIELD)`` in a
+    class body, including evaluated defaults, decorators and nested headers.
+    Also include deferred method and nested bodies conservatively: lexical
+    name resolution is deliberately not used to justify narrowing here.
+    """
+    found = set()
+
+    def visit(body, scope=()):
+        for node in body:
+            if isinstance(node, ast.ClassDef):
+                nested_scope = (*scope, node.name)
+                found.update((nested_scope, child.id) for child in ast.walk(node)
+                             if isinstance(child, ast.Name) and isinstance(child.ctx, ast.Load))
+                visit(node.body, nested_scope)
+
+    visit(tree.body)
+    return found
+
+
 def identity_edits(before, after):
     """Accept only same-polarity identity/equality replacements in an AST."""
     edits = []
@@ -183,6 +205,48 @@ def identity_edits(before, after):
         return left == right
 
     return edits if same(before, after) else []
+
+
+def same_ast(left, right, *, ignore_lambda_bodies=False, ignore_function_bodies=False, ignored_values=None):
+    """Compare syntax strictly, without materializing large AST dump strings."""
+    if type(left) is not type(right):
+        return False
+    if isinstance(left, ast.AST):
+        for field in left._fields:
+            if field == "value" and ignored_values and id(left) in ignored_values:
+                continue
+            if field == "body" and ((ignore_lambda_bodies and isinstance(left, ast.Lambda)) or
+                    (ignore_function_bodies and isinstance(left, (ast.FunctionDef, ast.AsyncFunctionDef)))):
+                continue
+            if not same_ast(getattr(left, field, None), getattr(right, field, None),
+                            ignore_lambda_bodies=ignore_lambda_bodies,
+                            ignore_function_bodies=ignore_function_bodies, ignored_values=ignored_values):
+                return False
+        return True
+    if isinstance(left, list):
+        if len(left) != len(right):
+            return False
+        for a, b in zip(left, right):
+            if not same_ast(a, b, ignore_lambda_bodies=ignore_lambda_bodies,
+                            ignore_function_bodies=ignore_function_bodies, ignored_values=ignored_values):
+                return False
+        return True
+    return left == right
+
+
+def lambda_body_edits_only(before, after):
+    """Line spans cannot distinguish a lambda body from its dispatch key/defaults."""
+    return same_ast(before, after, ignore_lambda_bodies=True)
+
+
+def statement_shape(node):
+    """Ignore expression edits while retaining statement nesting and order."""
+    if isinstance(node, list):
+        return tuple(statement_shape(child) for child in node)
+    return (type(node).__name__, tuple(
+        (name, statement_shape(value)) for name, value in ast.iter_fields(node)
+        if name in {"body", "orelse", "finalbody", "handlers", "cases"}
+    ))
 
 
 def identity_equivalent_types(left, right, left_member, right_member, negative):
@@ -224,9 +288,59 @@ class Selector:
         self.cache = {}
         self.line_cache = {}
         self.collection_attributes = set(self.map.get("collection_attributes", []))
+        self.collection_reads = set(self.map.get("collection_reads", []))
+        self.collection_lambda_bodies = {
+            path: set(lines) for path, lines in self.map.get("collection_lambda_bodies", {}).items()
+        }
+        collection_path = maps.parent / "collection-profile.json.gz"
+        if collection_path.exists():
+            collection = json.loads(gzip.decompress(collection_path.read_bytes()))
+            if (collection.get("complete") and not collection.get("failures")
+                    and collection.get("source_commit") == self.map.get("source_commit")
+                    and collection.get("ids") == self.map["ids"]):
+                for path, lines in collection.get("lambda_bodies", {}).items():
+                    self.collection_lambda_bodies.setdefault(path, set()).update(lines)
         self.literal_readers = {}
+        self.lambda_call_readers = {}
+        self.collection_lambda_sites = set()
+        lambda_path = maps.parent / "lambda-call-readers.json.gz"
+        if lambda_path.exists():
+            calls = json.loads(gzip.decompress(lambda_path.read_bytes()))
+            if (calls.get("complete") and not calls.get("failures")
+                    and calls.get("source_commit") == self.map.get("source_commit")
+                    and calls.get("source_hashes") == {
+                        path: value for path, value in self.map.get("source_hashes", {}).items()
+                        if path.startswith("sqlglot/")}
+                    and {"warm", "cold", "eager-import-collection"} <= set(calls.get("modes", []))
+                    and calls.get("ids") == self.map["ids"]):
+                self.lambda_call_readers = calls.get("readers", {})
+                self.collection_lambda_sites = set(calls.get("collection", []))
+        self.class_dict_readers = {}
+        self.collection_class_dicts = set()
+        class_dict_path = maps.parent / "class-dict-readers.json.gz"
+        if class_dict_path.exists():
+            class_dicts = json.loads(gzip.decompress(class_dict_path.read_bytes()))
+            if (class_dicts.get("complete") and not class_dicts.get("failures")
+                    and class_dicts.get("source_commit") == self.map.get("source_commit")
+                    and class_dicts.get("ids") == self.map["ids"]):
+                self.class_dict_readers = class_dicts.get("readers", {})
+                self.collection_class_dicts = set(class_dicts.get("collection", []))
+        self.namespace_profile = None
+        namespace_path = maps.parent / "namespace-readers.json.gz"
+        if namespace_path.exists():
+            namespaces = json.loads(gzip.decompress(namespace_path.read_bytes()))
+            if (namespaces.get("complete") and not namespaces.get("failures")
+                    and namespaces.get("source_commit") == self.map.get("source_commit")
+                    and namespaces.get("source_hashes") == self.map.get("source_hashes")
+                    and namespaces.get("ids") == self.map["ids"]
+                    and {"warm", "cold", "eager-import-collection"} <= set(namespaces.get("modes", []))):
+                self.namespace_profile = namespaces
+                for category in ("all", "opaque", "fields"):
+                    namespaces[category]["collection"] = set(namespaces[category]["collection"])
         self.reflections = {}
         self.code_cache = {}
+        self.new_code_cache = {}
+        self.lambda_body_only = {}
         reflection_path = maps.parent / "reflection-fields.json.gz"
         if reflection_path.exists():
             reflection = json.loads(gzip.decompress(reflection_path.read_bytes()))
@@ -246,6 +360,22 @@ class Selector:
 
     def bits(self, category, key):
         return int(self.map[category].get(key, "0"), 16)
+
+    def namespace_impact(self, symbol, attribute):
+        """Preserve opaque and unobserved dependencies when refining dict.get."""
+        readers = int(self.class_dict_readers.get(symbol, "0"), 16)
+        collection = symbol in self.collection_class_dicts
+        profile = self.namespace_profile
+        if profile is None:
+            return readers, collection
+        all_reads, opaque, fields = (profile[k] for k in ("all", "opaque", "fields"))
+        # A historical context missing from the new observation stays broad.
+        readers &= ~int(all_reads["readers"].get(symbol, "0"), 16)
+        readers |= int(opaque["readers"].get(symbol, "0"), 16)
+        readers |= int(fields["readers"].get(attribute, "0"), 16)
+        collection = ((collection and symbol not in all_reads["collection"])
+                      or symbol in opaque["collection"] or attribute in fields["collection"])
+        return readers, collection
 
     def lines(self, path, first, last):
         if path not in self.line_cache:
@@ -300,7 +430,7 @@ class Selector:
                 if isinstance(value, types.CodeType):
                     visit(value)
 
-        visit(compile(source, filename, "exec", dont_inherit=True))
+        visit(source if isinstance(source, types.CodeType) else compile(source, filename, "exec", dont_inherit=True))
         return found
 
     def reflection_impact(self, path, original, modified):
@@ -311,7 +441,7 @@ class Selector:
         if path not in self.code_cache:
             self.code_cache[path] = self.code_objects(original, filename)
         old_codes = self.code_cache[path]
-        new_codes = self.code_objects(modified, filename)
+        new_codes = self.new_code_cache[path]
         selected = 0
         comparable = {"co_argcount", "co_cellvars", "co_code", "co_consts", "co_exceptiontable",
                       "co_filename", "co_firstlineno", "co_flags", "co_freevars", "co_kwonlyargcount",
@@ -331,8 +461,66 @@ class Selector:
                     selected |= int(record["fields"].get(field, "0"), 16)
         return selected
 
+    def structural_impact(self, path, tree, new_tree, original, modified):
+        """Bindings and control-flow structure can affect unexecuted statements.
+
+        For example, assigning to a global in a rare branch makes it local in
+        the entire function, including paths that never execute that branch.
+        """
+        def functions(root):
+            found = {}
+
+            def visit(node, scope=()):
+                for child in ast.iter_child_nodes(node):
+                    if isinstance(child, ast.expr):
+                        continue
+                    nested = isinstance(child, (ast.FunctionDef, ast.AsyncFunctionDef, ast.ClassDef))
+                    key = (*scope, child.name) if nested else scope
+                    if isinstance(child, (ast.FunctionDef, ast.AsyncFunctionDef)):
+                        found.setdefault(key, []).append(child)
+                    visit(child, key)
+
+            visit(root)
+            return found
+
+        old_functions, new_functions = functions(tree), functions(new_tree)
+        if path not in self.code_cache:
+            self.code_cache[path] = self.code_objects(original, str(self.source / path))
+        before_codes = self.code_cache[path]
+        after_codes = self.new_code_cache[path]
+        # These fields describe scope, signatures, and generator/coroutine mode.
+        lexical_fields = ("co_varnames", "co_cellvars", "co_freevars", "co_flags",
+                          "co_argcount", "co_posonlyargcount", "co_kwonlyargcount")
+        changed_code_lines = set()
+        for name, before in before_codes.items():
+            after = after_codes.get(name, [])
+            for i, code in enumerate(before):
+                if len(before) != len(after) or any(
+                        getattr(code, field) != getattr(after[i], field) for field in lexical_fields):
+                    changed_code_lines.add(code.co_firstlineno)
+        selected = 0
+        collection = set(self.map.get("collection_lines", {}).get(path, []))
+        for key, before in old_functions.items():
+            after = new_functions.get(key, [])
+            for i, function in enumerate(before):
+                first = min([function.lineno, *(n.lineno for n in function.decorator_list)])
+                if (len(before) == len(after) and first not in changed_code_lines
+                        and statement_shape(function) == statement_shape(after[i])):
+                    continue
+                if any(function.body[0].lineno <= line <= function.end_lineno for line in collection):
+                    return self.all_bits
+                selected |= self.lines(path, function.lineno, function.end_lineno)
+        return selected
+
     def line_impact(self, path, line, nodes, insertion=False):
         enclosing = [n for n in nodes if n.lineno <= line <= n.end_lineno]
+        lambdas = [n for n in enclosing if isinstance(n, ast.Lambda) and line >= n.body.lineno]
+        lambda_sites = [f"{path}:{n.lineno}:{n.col_offset}" for n in lambdas]
+        if (any(n.lineno in self.collection_lambda_bodies.get(path, ()) for n in lambdas)
+                or any(site in self.collection_lambda_sites for site in lambda_sites)):
+            # Ordinary line coverage also records lambda creation. This separate
+            # call trace identifies bodies actually evaluated during collection.
+            return self.all_bits
         functions = [n for n in enclosing if isinstance(n, (ast.FunctionDef, ast.AsyncFunctionDef))]
         functions.sort(key=lambda n: n.end_lineno - n.lineno)
         function = functions[0] if functions else None
@@ -360,8 +548,19 @@ class Selector:
             return self.lines(path, function.lineno, function.end_lineno)
         if function is not None:
             return self.lines(path, function.lineno, function.end_lineno) | self.module(path)
-        lambdas = [n for n in enclosing if isinstance(n, ast.Lambda) and line >= n.body.lineno]
-        if lambdas and not insertion:
+        if lambdas and not insertion and self.lambda_body_only.get(path, False):
+            leaf_lambdas = all(not any(isinstance(child, (ast.Lambda, ast.GeneratorExp))
+                                       for child in ast.walk(node.body))
+                               for node in lambdas)
+            if leaf_lambdas and all(site in self.lambda_call_readers for site in lambda_sites):
+                # A physical line can contain multiple lambdas. Union
+                # their actual callers rather than guessing which column changed.
+                value = 0
+                for site in lambda_sites:
+                    value |= int(self.lambda_call_readers[site], 16)
+                return value
+            # Factories can return lambdas or generators evaluated by later tests.
+            # Keep the body span's deferred execution coverage for these factories.
             target = min(lambdas, key=lambda n: n.end_lineno - n.lineno)
             value = self.lines(path, target.body.lineno, target.body.end_lineno)
             if value:
@@ -370,18 +569,26 @@ class Selector:
         classes.sort(key=lambda n: n.end_lineno - n.lineno)
         if classes and not insertion:
             readers = self.literal_readers.get(path, {})
-            for node in enclosing:
-                if id(node) in readers:
-                    return readers[id(node)] | self.lines(path, line, line)
+            literal_hits = [readers[id(node)] for node in enclosing if id(node) in readers]
+            if literal_hits:
+                value = self.lines(path, line, line)
+                for bits in literal_hits:
+                    value |= bits
+                return value
+        declaration_readers = 0
         for cls in classes:
-            value = self.bits("symbols", path + ":" + cls.name)
+            symbol = path + ":" + cls.name
+            declaration_readers |= int(self.class_dict_readers.get(symbol, "0"), 16)
+            value = self.bits("symbols", symbol)
             if value:
-                return value | self.lines(path, line, line)
-        return self.module(path)
+                return value | declaration_readers | self.lines(path, line, line)
+        return self.module(path) | declaration_readers
 
     def select_change(self, change):
         path = change.old
         if path == "/dev/null" or change.new == "/dev/null" or path != change.new:
+            return self.all_bits
+        if path in self.collection_reads:
             return self.all_bits
         if not path.endswith(".py"):
             return self.bits("reads", path) or self.all_bits
@@ -389,23 +596,52 @@ class Selector:
         modified, touched, insertions = apply_change(source, change)
         try:
             new_tree = ast.parse(modified, filename=path)
-            compile(modified, path, "exec")
+            filename = str(self.source / path)
+            # Match the source-only flags used by reflection/scope analysis.
+            compiled = compile(new_tree, filename, "exec", dont_inherit=True)
+            self.new_code_cache[path] = self.code_objects(compiled, filename)
         except (SyntaxError, ValueError):
             return self.all_bits
         reflected = self.reflection_impact(path, source, modified)
-        if ast.dump(tree, include_attributes=False) == ast.dump(new_tree, include_attributes=False):
+        if same_ast(tree, new_tree):
             return self.bits("reads", path) | reflected
-        if self.equivalent_operators(path, tree, new_tree):
+        if self.allow_operator_proof and self.equivalent_operators(path, tree, new_tree):
             return self.bits("reads", path) | reflected
+        self.lambda_body_only[path] = lambda_body_edits_only(tree, new_tree)
+        structural = self.structural_impact(path, tree, new_tree, source, modified)
+        declaration_changed = not same_ast(tree, new_tree, ignore_function_bodies=True,
+                                           ignore_lambda_bodies=True)
+        module_statements = lambda root: [node for node in root.body if not isinstance(
+            node, (ast.FunctionDef, ast.AsyncFunctionDef, ast.ClassDef))]
+        if declaration_changed and not same_ast(
+                module_statements(tree), module_statements(new_tree),
+                ignore_function_bodies=True, ignore_lambda_bodies=True):
+            # A module value can be imported by value and materialize state in
+            # another module. Its consumers need never execute this source file.
+            # Baseline per-test line/module observations cannot bound that impact.
+            # Compare whole statements so EOF and blank-gap insertions count too.
+            return self.all_bits
         self.literal_readers[path] = {}
-        old_fields, new_fields = class_fields(tree), class_fields(new_tree)
+        old_fields, new_fields = ((class_fields(tree), class_fields(new_tree))
+                                  if declaration_changed else ({}, {}))
+        name_read_fields = ((class_field_name_reads(tree) | class_field_name_reads(new_tree))
+                            if old_fields and new_fields else set())
         for key in old_fields.keys() & new_fields.keys():
             old_node, old_signature = old_fields[key]
             new_node, new_signature = new_fields[key]
+            if old_node.value is None or new_node.value is None:
+                continue
             scope, name = key
             attribute = path + ":" + scope[-1] + ":" + name
+            symbol = path + ":" + scope[-1]
             readers = self.map.get("attributes", {}).get(attribute)
-            if old_signature != new_signature or readers is None or attribute in self.collection_attributes:
+            namespace_readers, namespace_collection = self.namespace_impact(symbol, attribute)
+            if name.startswith("__") or any(isinstance(n, ast.Call) for value in (old_node.value, new_node.value)
+                                             for n in ast.walk(value)):
+                continue
+            if (key in name_read_fields or old_signature != new_signature or readers is None
+                    or attribute in self.collection_attributes
+                    or namespace_collection):
                 continue
             try:
                 # Calls, names and other expressions could introduce side effects.
@@ -413,16 +649,25 @@ class Selector:
                 ast.literal_eval(new_node.value)
             except (ValueError, TypeError, SyntaxError):
                 continue
-            self.literal_readers[path][id(old_node)] = int(readers, 16)
+            self.literal_readers[path][id(old_node)] = int(readers, 16) | namespace_readers
+        if self.literal_readers[path] and not same_ast(tree, new_tree, ignored_values=set(self.literal_readers[path])):
+            # A physical line can also change a class header or another statement.
+            # Only complete AST equality outside proven literal values permits
+            # treating the line solely as a field-reader dependency.
+            self.literal_readers[path] = {}
         self.overrides[path] = modified
         for line in touched | insertions:
             inside_body = any(isinstance(n, (ast.FunctionDef, ast.AsyncFunctionDef))
                               and n.body[0].lineno <= line <= n.end_lineno for n in nodes)
-            inside_lambda = any(isinstance(n, ast.Lambda) and n.body.lineno <= line <= n.end_lineno
+            if inside_body and declaration_changed:
+                # Replacement hunks can dedent a formerly conditional function
+                # statement to module/class scope without an insertion marker.
+                return self.all_bits
+            inside_lambda = self.lambda_body_only[path] and any(isinstance(n, ast.Lambda) and n.body.lineno <= line <= n.end_lineno
                                 for n in nodes)
-            if not inside_body and not inside_lambda:
+            if declaration_changed or (not inside_body and not inside_lambda):
                 self.import_needed = True
-        value = self.bits("reads", path) | reflected
+        value = self.bits("reads", path) | reflected | structural
         for line in touched:
             value |= self.line_impact(path, line, nodes)
         for line in insertions:
@@ -434,7 +679,12 @@ class Selector:
         self.import_needed = False
         try:
             selected = 0
-            for change in parse_patch(patch):
+            changes = parse_patch(patch)
+            paths = [change.old if change.old != "/dev/null" else change.new for change in changes]
+            if len(set(paths)) != len(paths):
+                raise ValueError("repeated file sections")
+            self.allow_operator_proof = len(changes) == 1
+            for change in changes:
                 selected |= self.select_change(change)
             if self.import_needed and selected != self.all_bits:
                 imports = [p for p, lines in self.map.get("collection_lines", {}).items()

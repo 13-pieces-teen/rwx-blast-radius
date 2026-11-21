@@ -1,0 +1,211 @@
+{
+  "date": "2026-11-21",
+  "scope": "Local evidence frozen before authorized online evaluation; official result recorded separately",
+  "base_submission": "5887d18e48f424245eec2d5527d15ef1d2242d79",
+  "image": "rwx-selector:v6-local",
+  "image_id": "sha256:d0ea977481575e324bd4197198127b39be0fec4d7c3f04c880ebddbb60c7facf",
+  "selector_sha256": "d09a608a56e332df7c536bdf6f59f5648ce633123863548dce9b05866feb0c18",
+  "artifacts_sha256": {
+    "baseline-map.json.gz": "085e04016f605bfca0b3db71a1e81f0d5d8afaf6d8761e7cb4129ccc656caf62",
+    "class-dict-readers.json.gz": "6457a26700abd297a6229659d640a8bd0cb54e494f9b046c082c39e768b53cae",
+    "class-setup-profile.json.gz": "35381a5cdd49db837e28a22dc1c6b8ba67e6e3b28ee8404cf9e260b29f49f60e",
+    "collection-profile.json.gz": "84629d7ba9bcceaae9ef575930958629b8c213392e63a6c422426e30c5f74c6b",
+    "import-profile.json.gz": "4f8696841dcbf1363746d5b882bfae1809a677cffe2013a4c2ab23bae9bcdc86",
+    "lambda-call-readers.json.gz": "bed4b3ad6d3d2af197f88caddc45525f81c9f9aee3849a56b822cfe8c41f4aa6",
+    "namespace-readers.json.gz": "9827ce5afc31e086d9dedb51b317e3e2e5ac81cd06ba2ca11a464558c7769b33",
+    "reflection-fields.json.gz": "e6a0e6181aecefb5ee07682cab444a01705efa62d6bb8b71a055f8907c86e905",
+    "type-profiles.json.gz": "6a89b69ef7468166f0950ac30a616e6fa1bd59a4387bfced57fb8863a31397d4"
+  },
+  "sample_runs": [
+    {
+      "ok": true,
+      "simulated_milliseconds": 127083,
+      "missed_commits": [],
+      "cpu_seconds": 1.8252549999999998,
+      "wall_seconds": 1.9099012169999696,
+      "max_rss_kb": 83776,
+      "total_seconds": 128.908255
+    },
+    {
+      "ok": true,
+      "simulated_milliseconds": 127083,
+      "missed_commits": [],
+      "cpu_seconds": 1.830556,
+      "wall_seconds": 1.8536467099993388,
+      "max_rss_kb": 83952,
+      "total_seconds": 128.913556
+    },
+    {
+      "ok": true,
+      "simulated_milliseconds": 127083,
+      "missed_commits": [],
+      "cpu_seconds": 1.7971009999999998,
+      "wall_seconds": 1.829806785999608,
+      "max_rss_kb": 83976,
+      "total_seconds": 128.880101
+    }
+  ],
+  "sample_median_total_seconds": 128.908255,
+  "v5_sample_median_total_seconds": 130.44119,
+  "sample_simulated_improvement_seconds": 1.44,
+  "sample_total_median_improvement_seconds": 1.532935000000009,
+  "unit_tests_passed": 93,
+  "namespace_probes": [
+    {
+      "exit_code": 0,
+      "failed": [],
+      "passed": 1615,
+      "skipped": [],
+      "collection_errors": [],
+      "id": "namespace-001",
+      "selected": 5,
+      "omitted": 1615,
+      "wall_seconds": 112.02338135399987
+    },
+    {
+      "exit_code": 0,
+      "failed": [],
+      "passed": 1618,
+      "skipped": [],
+      "collection_errors": [],
+      "id": "namespace-002",
+      "selected": 2,
+      "omitted": 1618,
+      "wall_seconds": 95.13665509100065
+    },
+    {
+      "exit_code": 0,
+      "failed": [],
+      "passed": 1617,
+      "skipped": [],
+      "collection_errors": [],
+      "id": "namespace-003",
+      "selected": 3,
+      "omitted": 1617,
+      "wall_seconds": 92.51407411200034
+    },
+    {
+      "exit_code": 0,
+      "failed": [],
+      "passed": 1618,
+      "skipped": [],
+      "collection_errors": [],
+      "id": "namespace-004",
+      "selected": 2,
+      "omitted": 1618,
+      "wall_seconds": 96.1067861699994
+    },
+    {
+      "exit_code": 0,
+      "failed": [],
+      "passed": 1328,
+      "skipped": [],
+      "collection_errors": [],
+      "id": "namespace-005",
+      "selected": 292,
+      "omitted": 1328,
+      "wall_seconds": 74.51671078100026
+    },
+    {
+      "exit_code": 0,
+      "failed": [],
+      "passed": 1615,
+      "skipped": [],
+      "collection_errors": [],
+      "id": "namespace-006",
+      "selected": 5,
+      "omitted": 1615,
+      "wall_seconds": 102.91125321099935
+    },
+    {
+      "exit_code": 0,
+      "failed": [],
+      "passed": 1617,
+      "skipped": [],
+      "collection_errors": [],
+      "id": "namespace-007",
+      "selected": 3,
+      "omitted": 1617,
+      "wall_seconds": 96.00742880899998
+    },
+    {
+      "exit_code": 0,
+      "failed": [],
+      "passed": 1450,
+      "skipped": [],
+      "collection_errors": [],
+      "id": "namespace-008",
+      "selected": 170,
+      "omitted": 1450,
+      "wall_seconds": 88.53756235900073
+    }
+  ],
+  "namespace_omitted_tests_passed": 12478,
+  "fixture_omitted_tests_passed": 1559,
+  "new_omitted_executions_passed": 14037,
+  "selection_comparison": {
+    "patches": 142,
+    "narrowed": 8,
+    "changes_with_removals": [
+      {
+        "patch": "evaluation/namespace-probes/commits/namespace-001.patch",
+        "old": 170,
+        "new": 5,
+        "removed_count": 165
+      },
+      {
+        "patch": "evaluation/namespace-probes/commits/namespace-002.patch",
+        "old": 357,
+        "new": 2,
+        "removed_count": 355
+      },
+      {
+        "patch": "evaluation/namespace-probes/commits/namespace-003.patch",
+        "old": 308,
+        "new": 3,
+        "removed_count": 305
+      },
+      {
+        "patch": "evaluation/namespace-probes/commits/namespace-004.patch",
+        "old": 150,
+        "new": 2,
+        "removed_count": 148
+      },
+      {
+        "patch": "evaluation/namespace-probes/commits/namespace-006.patch",
+        "old": 46,
+        "new": 5,
+        "removed_count": 41
+      },
+      {
+        "patch": "evaluation/namespace-probes/commits/namespace-007.patch",
+        "old": 6,
+        "new": 3,
+        "removed_count": 3
+      },
+      {
+        "patch": "evaluation/probes/commits/probe-022.patch",
+        "old": 137,
+        "new": 3,
+        "removed_count": 134
+      },
+      {
+        "patch": "sample/commits/535z.patch",
+        "old": 170,
+        "new": 5,
+        "removed_count": 165
+      }
+    ]
+  },
+  "validated_selection_supersets": 28,
+  "confirmed_new_omission_mechanisms": [
+    "Class fixture attribution after pytest had captured the original bound methods",
+    "Module values imported by value, including EOF/blank-gap inserted declarations"
+  ],
+  "limits": [
+    "Targeted diagnostic mutations are not an unbiased benchmark",
+    "Class-setup supplement executed four baseline sentinels, not a whole suite",
+    "Existing definition-line coverage retained; more aggressive removal not adopted",
+    "Official hidden miss remains unverified until a new scored run"
+  ]
+}

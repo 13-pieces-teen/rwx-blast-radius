@@ -1,0 +1,8 @@
+{
+  "source_commit": "eb11aec4be8cb2122afe713a4816662c3f0fb2fa",
+  "collected_tests": 1621,
+  "complete": true,
+  "profile_sha256": "84629d7ba9bcceaae9ef575930958629b8c213392e63a6c422426e30c5f74c6b",
+  "evidence": "Original pytest collect-only plus eager module import call trace; 1621 matching collected identities",
+  "import_supplement": "import-provenance.json"
+}

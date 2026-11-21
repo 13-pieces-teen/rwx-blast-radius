@@ -1,0 +1,10 @@
+{
+  "source_commit": "eb11aec4be8cb2122afe713a4816662c3f0fb2fa",
+  "collected_tests": 1621,
+  "complete": true,
+  "profile_sha256": "6457a26700abd297a6229659d640a8bd0cb54e494f9b046c082c39e768b53cae",
+  "evidence": "Original cold-cache full suite: 1620 passed, 1 skipped, 25440 subtests passed; augmented with eager import namespace reads",
+  "import_supplement": "import-provenance.json",
+  "before_class_setup_sha256": "4dd171318e793307ea6e9ae7891a1f91cae3a513e31233eeaf0dcaca868ea77a",
+  "class_setup_supplement": "class-setup-provenance.json"
+}

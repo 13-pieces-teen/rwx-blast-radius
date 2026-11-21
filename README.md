@@ -8,6 +8,18 @@ Submission **BB-BA6CCCF5**, commit `5887d18e48f424245eec2d5527d15ef1d2242d79`, w
 
 This confirms an unresolved generalization miss despite the local sample checks below. The server does not disclose the missed patch. This is a practice result, not the final score. [Recorded official result](docs/official-practice-2026-11-21.json).
 
+## Local robustness round v6
+
+Class-shared fixture reads and values imported by alias exposed two further omission mechanisms. The collector now wraps class fixtures before pytest captures them, and module declaration changes retain indirect consumers, including EOF insertions. Namespace observations safely distinguish individual mapping keys while preserving opaque consumers and derived class state.
+
+The public sample remains zero-miss in all three constrained runs: **127.083 simulated seconds**, **128.908 seconds CPU-inclusive median** (v5: 130.441). Eight targeted namespace mutations passed all **12,478 omitted tests**; the class-fixture counterexample passed another **1,559**. All **93 regression checks** passed, and final selections preserve 28 completed validation records. These local results do not identify or prove removal of the undisclosed official miss. [Results, provenance and limits](docs/local-optimization-v6.md).
+
+## Local robustness round v5
+
+Four independently reproduced omission mechanisms are fixed: cross-test dispatch caches, lazy-import derived state, dictionary keys sharing a line with a lambda, and function-wide effects of local bindings. The four diagnosed regression patches improve from 4 misses to 0; their simulated cost including penalties falls from 1210.250 to 81.610 seconds. This deliberately selected regression set is not an unbiased benchmark or an official score.
+
+Twelve new seeded mutations passed all 17,298 omitted-test executions. The final code passes 66 regression checks. On the public sample, stronger coverage costs 8.110 additional simulated seconds; the three-run CPU-inclusive median is 130.441 seconds. This version remains local: no publication or official resubmission was performed in this round. [Validation details and limits](docs/local-optimization-v5.md).
+
 ## Measured progress
 
 On the **30 public sample patches**, with the official Docker runtime restrictions:
@@ -20,14 +32,18 @@ On the **30 public sample patches**, with the official Docker runtime restrictio
 | Baseline-type equivalence v3 | 120.413 | 123.417 | 0 |
 | Cached Python bytecode v3.1 | 120.413 | 121.964 | 0 |
 | Field-aware reflection dependencies v4 | 120.413 | 121.797 | 0 |
+| Cache/import/scope-safe selector v5 | 128.523 | 130.441 | 0 |
+| Shared-fixture and namespace-aware selector v6 | 127.083 | 128.908 | 0 |
 
-This is an 89.94% reduction on the local sample set. These are **local measurements**, not a practice-board or final score. The website's 1614.1-second baseline uses a different evaluation batch and is not the denominator here. CPU is measured as Linux process user+system time, including children; the server uses its container-wide accounting. Small CPU differences between adjacent versions can be measurement noise.
+The v4 result was an 89.94% reduction on the local sample set; v5 intentionally spends more on coverage after reproducing real omissions. These are **local measurements**, not a practice-board or final score. The website's 1614.1-second baseline uses a different evaluation batch and is not the denominator here. CPU is measured as Linux process user+system time, including children; the server uses its container-wide accounting. Small CPU differences between adjacent versions can be measurement noise.
 
 An independently generated 30-mutation batch exposed one collection-time dependency bug, now conservatively handled. All other omitted-test checks passed; v2's additional omissions were also exercised. One generated mutation accidentally matches a sample, so this is not a strict 30-example held-out set. Sample success is not a guarantee for unseen changes. See [PROGRESS.md](PROGRESS.md).
 
 ## Approach
 
 - The maps are generated solely from SQLGlot commit `eb11aec4be8cb2122afe713a4816662c3f0fb2fa`, before applying any patch. They contain per-test line coverage, fixture reads, expression/dialect class usage and class-configuration reads.
+- Warm and per-test cold dispatch-cache traces are unioned. A separate eager-import trace retains state materialized when a module would otherwise be lazily imported by the first test.
+- Lambda body selection uses actual calls from complete warm/cold suites and eager imports, keeping dictionary keys, defaults, nested lambda factories and lazy generator expressions conservative. Source-reading and code-reflection dependencies remain active.
 - Pure literal class-field changes use observed readers only when the declaration is otherwise unchanged and the field was not read during collection. Collection-time reads retain the broader class dependencies because they can generate cached state.
 - A separate baseline trace records operand types at identity comparisons. At runtime, the selector proves selected identity/equality replacements equivalent for the observed built-in slots, exact NoneType and unique enum members. It rejects custom equality, unknown observations and files containing additional AST changes. The trace evaluates only the original operator, never possible future edits.
 - Reflection dependencies record the code-object fields that tests and Python's `inspect` read. The selector compiles the old/new source in memory and retains readers of changed fields, even if they never call the function. Reading a function's argument count alone does not make its body constants a dependency.
@@ -65,7 +81,7 @@ docker run --rm --network none \
   -v /absolute/raw-maps:/maps:ro rwx-maps python /entry/tools/export_maps.py
 ```
 
-`--attributes` records class-configuration reads. Generated maps and source hashes are in `artifacts/`; large raw coverage databases, evaluation outputs and mutation results stay outside the submission history. The committed map's provenance must show no instrumentation failures.
+`--attributes` records class-configuration reads. Generated maps and source hashes are in `artifacts/`; large raw coverage databases, evaluation outputs and mutation results stay outside the submission history. Provenance preserves original instrumentation failures and completed recovery traces; incomplete observations are rejected. The class-fixture supplement is explicitly a four-sentinel trace, not a full-suite run.
 
 ```sh
 python -m unittest discover -s tests -v
@@ -76,6 +92,8 @@ The selector tests cover patch reconstruction, source mismatch handling, worker 
 The type trace can be regenerated in the same mapping environment with `python /tools/build_type_profiles.py --source /src --output /profiles`. It must complete the full test suite; the selector verifies the pinned commit and exact collected test identities before using it. Its provenance is in `artifacts/type-profiles-provenance.json`.
 
 The reflection trace uses `python /tools/build_reflection_fields.py --source /src --output /reflections`. It instruments field reads before importing `inspect` and disables pytest assertion rewriting so test modules use the observation loader. The unchanged full suite must pass. Its provenance is in `artifacts/reflection-fields-provenance.json`.
+
+For v5, also collect `build_maps.py --attributes --cold-caches`, union it with the warm map using `export_maps.py --union` and retain the old attribute-key set with `--attribute-keys`. `build_import_profile.py` and `merge_import_profile.py` add eager-import observations. The class-dictionary, collection-call and lambda-call profiles have separate builders in `tools/`; `merge_lambda_profiles.py` requires warm, cold and eager-import modes. Provenance records all inputs and any isolated recovery after instrumentation failures; those recoveries are not described as clean full-suite runs.
 
 ## Offline generalization checks
 

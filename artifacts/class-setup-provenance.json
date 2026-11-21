@@ -1,0 +1,23 @@
+{
+  "source_commit": "eb11aec4be8cb2122afe713a4816662c3f0fb2fa",
+  "ids": 1621,
+  "profile_sha256": "35381a5cdd49db837e28a22dc1c6b8ba67e6e3b28ee8404cf9e260b29f49f60e",
+  "input_sha256": {
+    "baseline-map.json.gz": "8588bead2f8f7c3be2288a9c61e5da907c2024faba3c0a59a55650a525da8f4c",
+    "class-dict-readers.json.gz": "4dd171318e793307ea6e9ae7891a1f91cae3a513e31233eeaf0dcaca868ea77a",
+    "lambda-call-readers.json.gz": "375dbc2df1e5c251583c8e69129e328a52ed0d1f9b357c18ae0afaddec7cd015"
+  },
+  "outputs": {
+    "baseline-map.json.gz": "085e04016f605bfca0b3db71a1e81f0d5d8afaf6d8761e7cb4129ccc656caf62",
+    "class-dict-readers.json.gz": "6457a26700abd297a6229659d640a8bd0cb54e494f9b046c082c39e768b53cae",
+    "lambda-call-readers.json.gz": "bed4b3ad6d3d2af197f88caddc45525f81c9f9aee3849a56b822cfe8c41f4aa6"
+  },
+  "generator_sha256": "d7fd0a09fd542de4ba002fb00468a0b0b80dca182dc22957cc6d8664a8513718",
+  "sentinel_tests": [
+    "tests/test_executor.py::TestExecutor::test_table_depth_mismatch",
+    "tests/test_lineage.py::TestLineage::test_lineage_join_with_qualified_star",
+    "tests/test_optimizer.py::TestOptimizer::test_extract_meta_schema_directive",
+    "tests/test_sqlglotc.py::TestSQLGlotC::test_dry_run_preserves_obsolete_extensions"
+  ],
+  "evidence": "One cheapest baseline sentinel per source-defined class fixture; only actual setup, teardown and class-cleanup contexts; not a full-suite test run"
+}

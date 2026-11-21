@@ -134,12 +134,14 @@ def main():
     p = argparse.ArgumentParser()
     p.add_argument("--source", type=Path, default=Path("/src"))
     p.add_argument("--output", type=Path, default=Path("/profiles"))
+    p.add_argument("--cold-caches", action="store_true")
     args, pytest_args = p.parse_known_args()
     args.output.mkdir(parents=True, exist_ok=True)
     os.chdir(args.source)
     sys.path.insert(0, str(args.source))
     collector = Collector(args.source, args.output)
     collector.cov = NoCoverage()
+    collector.cold_caches = args.cold_caches
     concurrent.futures.ProcessPoolExecutor = InlineExecutor
     profiler = TypeProfiler(collector)
     profiler.install()
@@ -147,6 +149,7 @@ def main():
                        plugins=[collector])
     failures = [r for r in collector.results if r["outcome"] == "failed"]
     result = {"source_commit": "eb11aec4be8cb2122afe713a4816662c3f0fb2fa",
+              "cold_caches": args.cold_caches,
               "complete": code == 0 and not failures,
               "ids": sorted(collector.items), "failures": failures,
               "types": profiler.types, "comparisons": {k: sorted(v) for k, v in profiler.sites.items()},
