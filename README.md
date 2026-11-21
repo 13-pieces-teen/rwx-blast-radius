@@ -4,9 +4,9 @@ An entry for the RWX Buildathon track. For each independent SQLGlot patch, the s
 
 ## Official practice result
 
-Submission **BB-F47DED7A**, commit `a28c3f227d4cad0effcb037e0162176c1407421c`, was scored on 2026-11-21: **214.4 seconds**. All three runs missed **zero commits**; each had 211.977 simulated seconds and 2.42, 2.44 and 2.44 CPU seconds. It is the team's current best and selected final entry. [Official v7 result](docs/official-practice-v7-2026-11-21.json).
+Submission **BB-CB9A4CE9**, commit `66f69cfd271296ba6055731b1b79fe5b6a649914`, was scored on 2026-11-21: **214.3 seconds**. All three runs missed **zero commits**; each had 211.977 simulated seconds and 2.36, 2.34 and 2.37 CPU seconds. It is the team's current best and selected final entry. [Official v8 result](docs/official-practice-v8-2026-11-21.json).
 
-Compared with v6 (`ccec7a6`, 248.4 seconds, also zero-miss), the total decreases by **34.0 seconds (13.69%)**, including **33.430 seconds** less simulated CI time. The original `5887d18` scored 471.7 seconds with one missed commit and 300 penalty seconds per run. Its hypothetical penalty-free total is about 171.7 seconds, but it did not achieve that as a zero-miss entry. The current non-penalty simulated time remains 43.527 seconds above that original entry. Practice results do not guarantee unseen final performance. [Previous v6 result](docs/official-practice-v6-2026-11-21.json).
+V7 reduced the zero-miss v6 score from 248.4 to 214.4 seconds, including **33.430 seconds** less simulated CI time. V8 lowers the displayed total another **0.1 second**, with unchanged simulated CI time. The original `5887d18` scored 471.7 seconds with one missed commit and 300 penalty seconds per run. Its hypothetical penalty-free total is about 171.7 seconds, but it did not achieve that as a zero-miss entry. The current non-penalty simulated time remains 43.527 seconds above that original entry. Practice results do not guarantee unseen final performance. [Previous v7 result](docs/official-practice-v7-2026-11-21.json) · [v6 result](docs/official-practice-v6-2026-11-21.json).
 
 ## Local optimization round v8
 

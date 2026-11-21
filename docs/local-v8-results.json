@@ -185,7 +185,7 @@
     "commits_per_run": 30,
     "median_cpu_savings": 0.14135099999999978
   },
-  "official_result": null,
+  "official_result": "docs/official-practice-v8-2026-11-21.json",
   "entry_profile_used_in_production": false,
   "limits": "Local CPU improvement only. The 124 regression run used the byte-identical frozen candidate; historical omitted-test executions were not repeated. Entry research remains uncertified and excluded from the image."
 }
