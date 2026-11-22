@@ -10,9 +10,13 @@ Submission **BB-CB9A4CE9**, commit `66f69cfd271296ba6055731b1b79fe5b6a649914`, w
 
 V7 reduced the zero-miss v6 score from 248.4 to 214.4 seconds, including **33.430 seconds** less simulated CI time. V8 lowers the displayed total another **0.1 second**, with unchanged simulated CI time. The original `5887d18` scored 471.7 seconds with one missed commit and 300 penalty seconds per run. Its hypothetical penalty-free total is about 171.7 seconds, but it did not achieve that as a zero-miss entry. The current non-penalty simulated time remains 43.527 seconds above that original entry. Practice results do not guarantee unseen final performance. [Previous v7 result](docs/official-practice-v7-2026-11-21.json) · [v6 result](docs/official-practice-v6-2026-11-21.json).
 
+## Local optimization round v10
+
+The current Docker entrypoint is `precision_selector.py`, combining baseline-only default-argument observations with shared-executor failure propagation. The default rule accepts only changes with no affected observed contexts and preserves source/reflection readers; unsupported cases retain v8 selection. The executor guard adds all users of a class-shared pool when a changed transport or initialization path may break that pool. [Default dependencies](docs/default-dependencies.md) · [Shared-executor dependencies](docs/shared-executor-dependencies.md) · [Local validation](docs/local-optimization-v10.md).
+
 ## Local optimization round v9
 
-The current Docker entrypoint is the **prefix observation practice experiment**. It packages a separately validated experiment while retaining the v8 base selector. Its official score is 218.3 seconds, slower than v8; its local gains are distribution-dependent and its canonical-order assumption remains a limitation. [V9 evidence and limits](docs/local-optimization-v9.md).
+The previous v9 Docker entrypoint was the **prefix observation practice experiment**. Its official score is 218.3 seconds, slower than v8; its local gains are distribution-dependent and its canonical-order assumption remains a limitation. [V9 evidence and limits](docs/local-optimization-v9.md).
 
 ## Local optimization round v8
 
@@ -69,7 +73,7 @@ An independently generated 30-mutation batch exposed one collection-time depende
 - Import-time execution, syntax errors, unsupported changes and incomplete source information receive conservative handling. Declaration edits are checked in an isolated import process with all modified modules present together.
 - Scheduling evaluates 1–8 workers using integer milliseconds, longest-test-first balancing, and the 2-second cost of every nonempty worker.
 
-The runtime never reads sample answers or a patch-to-failure lookup table. Only `semantic_selector.py`, the v8 `selector.py`, their runtime helpers, the baseline maps and the pinned upstream tree are copied into the image.
+The runtime never reads sample answers or a patch-to-failure lookup table. Only `precision_selector.py`, `default_dependencies.py`, `shared_executor_dependencies.py`, the v8 `selector.py`, their runtime helpers, the baseline maps and the pinned upstream tree are copied into the image.
 
 The image retains SQLGlot's MIT license at `/opt/sqlglot/LICENSE`; a copy is also in [docs/SQLGLOT_LICENSE.txt](docs/SQLGLOT_LICENSE.txt).
 
@@ -77,7 +81,7 @@ The image retains SQLGlot's MIT license at `/opt/sqlglot/LICENSE`; a copy is als
 
 ```sh
 docker build --platform linux/amd64 -t blast-radius-entry .
-python tools/evaluate.py --image blast-radius-entry --entry-script /app/semantic_selector.py --label local
+python tools/evaluate.py --image blast-radius-entry --entry-script /app/precision_selector.py --label local
 ```
 
 The evaluation helper works from PowerShell as well as Linux. It mounts only `sample/commits` and `sample/tests.json` into the container. It runs three times with the official CPU, memory, network, filesystem, user and process restrictions, and saves outputs/reports under `evaluation/`.

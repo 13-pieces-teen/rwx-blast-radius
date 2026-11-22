@@ -1,0 +1,176 @@
+{
+  "artifact": "artifacts/default-dependencies.json.gz",
+  "artifact_sha256": "4fa72cf8067b79f4c8887cc15d5ce772e2dc39ae92d3f44508f0160e644bfdda",
+  "baseline_map_sha256": "6c14c6f083287537b083a5ef82795212edc36e2e1425b6a937a526944e1a2411",
+  "binding_semantics": "At each ordinary function call, record exact bound bool before body execution. Old-default value remains possibly implicit; only the opposite exact bool excludes use of that default. Function/code/default-table identity and current slot value are checked; separate audit records mutations and clones.",
+  "collection_semantics": "Collection/class fixtures separately distinguish seen opposite values from possible-default or opaque values. Metadata reads or possible/opaque stage values reject narrowing. Old collection body coverage without corresponding observations is retained; the inline declaration/body shared physical line is not a proven call.",
+  "collector_snapshots": [
+    {
+      "identical_to_executed_snapshot": true,
+      "path": "tools/defaults_profile/binding_v3/collect_profile.py",
+      "sha256": "97e140b90624e9b38214288deba1c2e659877405947aada258e628b71e88ac40"
+    },
+    {
+      "identical_to_executed_snapshot": true,
+      "path": "tools/defaults_profile/binding_v3/profile_support.py",
+      "sha256": "3a278f466ac0329b1ba356f111394ee737e3764246db635632d312fd551a94f8"
+    },
+    {
+      "identical_to_executed_snapshot": true,
+      "path": "tools/defaults_profile/identity_v1/collect_profile.py",
+      "sha256": "957c536cb47307dc2d5c3c34fd20e96b9e2d7fb62dc457a046c466f886e6425c"
+    },
+    {
+      "identical_to_executed_snapshot": true,
+      "path": "tools/defaults_profile/identity_v1/profile_support.py",
+      "sha256": "7e7f42974a173022f29480cfd8238f193040c9d558145fe8a409a544af4e0e49"
+    }
+  ],
+  "complete": true,
+  "execution_model": "InlineExecutor preserving initializer/call/result pickle; not native persistent pool semantics",
+  "failures": [],
+  "format_version": 1,
+  "inputs_exclude": [
+    "mutation patches",
+    "mutation failure labels",
+    "expected selections",
+    "test costs",
+    "leaderboard answers"
+  ],
+  "limitations": [
+    "Fixed pinned source and complete baseline modes; not a guarantee for arbitrary unseen tests or nondeterministic new execution paths.",
+    "Metadata model does not claim completeness for arbitrary low-level heap introspection such as unobserved gc/ctypes internals.",
+    "InlineExecutor observations are for attribution; native persistent-pool correctness is handled by separate dependencies and native truth validation."
+  ],
+  "merge_tool": "tools/defaults_profile/merge_profile.py",
+  "merge_tool_sha256": "2e39bba8870ad7d68f1cc422b14b6130a65a9e0de44e90c9f03c5b48572b986c",
+  "metadata_semantics": "Instrument source/test default-table reads, builtins.getattr, public inspect entry points and CPython object.__getattr__ audit events. object.__setattr__ and function.__new__ record ambiguous identity.",
+  "runs": {
+    "cold": {
+      "generator_hashes": {
+        "build_maps.py": "877ae4dfbc25902c828f6787ae5185aab42aac82989ac01cb484212ead4b2c7e",
+        "collect_profile.py": "97e140b90624e9b38214288deba1c2e659877405947aada258e628b71e88ac40",
+        "profile_support.py": "3a278f466ac0329b1ba356f111394ee737e3764246db635632d312fd551a94f8"
+      },
+      "host_sha256": "a10b9c84c6469ce99f508dab22fa12f9382884944863d414de88c12f64dc8304",
+      "image": "sha256:88076b5c3c02633283124709e875d64f385436438a1ab63aac9dceac94f24a59",
+      "observations_sha256": "066950189e65b989608a28449b3b45d27978d57a46eb3ef2e94c6a4dbfa76208",
+      "pytest": "9.2.0",
+      "python": "3.13.18",
+      "reports": {
+        "('SubtestReport', 'call', 'passed')": 25440,
+        "('TestReport', 'call', 'passed')": 1620,
+        "('TestReport', 'call', 'skipped')": 1,
+        "('TestReport', 'setup', 'passed')": 1621,
+        "('TestReport', 'teardown', 'passed')": 1621
+      },
+      "state_sha256": "8b3c56b0d3dbb7a3dcd5cc965dec0c83be899fbad46c1526c0be39dd4f1f363f"
+    },
+    "eager-import-collection": {
+      "generator_hashes": {
+        "build_maps.py": "877ae4dfbc25902c828f6787ae5185aab42aac82989ac01cb484212ead4b2c7e",
+        "collect_profile.py": "97e140b90624e9b38214288deba1c2e659877405947aada258e628b71e88ac40",
+        "profile_support.py": "3a278f466ac0329b1ba356f111394ee737e3764246db635632d312fd551a94f8"
+      },
+      "host_sha256": "a10b9c84c6469ce99f508dab22fa12f9382884944863d414de88c12f64dc8304",
+      "image": "sha256:88076b5c3c02633283124709e875d64f385436438a1ab63aac9dceac94f24a59",
+      "observations_sha256": "efbaed5912d36ac780f45b4494c916ee5063dcced1a354e45169f26658b96beb",
+      "pytest": "9.2.0",
+      "python": "3.13.18",
+      "reports": {},
+      "state_sha256": "dd4e28b26cd580ee907cfcf119eadb4516d37baa6b4bfbceff38bcaea3d771d1"
+    },
+    "identity-cold": {
+      "generator_hashes": {
+        "build_maps.py": "877ae4dfbc25902c828f6787ae5185aab42aac82989ac01cb484212ead4b2c7e",
+        "collect_profile.py": "957c536cb47307dc2d5c3c34fd20e96b9e2d7fb62dc457a046c466f886e6425c",
+        "profile_support.py": "7e7f42974a173022f29480cfd8238f193040c9d558145fe8a409a544af4e0e49"
+      },
+      "host_sha256": "a10b9c84c6469ce99f508dab22fa12f9382884944863d414de88c12f64dc8304",
+      "image": "sha256:88076b5c3c02633283124709e875d64f385436438a1ab63aac9dceac94f24a59",
+      "observations_sha256": "2d55dd931aaca6d30754f9a0bae5b3b550a47a1090b702f01f0912c796caedd4",
+      "pytest": "9.2.0",
+      "python": "3.13.18",
+      "reports": {
+        "('SubtestReport', 'call', 'passed')": 25440,
+        "('TestReport', 'call', 'passed')": 1620,
+        "('TestReport', 'call', 'skipped')": 1,
+        "('TestReport', 'setup', 'passed')": 1621,
+        "('TestReport', 'teardown', 'passed')": 1621
+      },
+      "state_sha256": "59e43ad40554d95b7b313348367094598be6f5a18cb861a5e7159c2420f640fa"
+    },
+    "identity-eager-import-collection": {
+      "generator_hashes": {
+        "build_maps.py": "877ae4dfbc25902c828f6787ae5185aab42aac82989ac01cb484212ead4b2c7e",
+        "collect_profile.py": "957c536cb47307dc2d5c3c34fd20e96b9e2d7fb62dc457a046c466f886e6425c",
+        "profile_support.py": "7e7f42974a173022f29480cfd8238f193040c9d558145fe8a409a544af4e0e49"
+      },
+      "host_sha256": "a10b9c84c6469ce99f508dab22fa12f9382884944863d414de88c12f64dc8304",
+      "image": "sha256:88076b5c3c02633283124709e875d64f385436438a1ab63aac9dceac94f24a59",
+      "observations_sha256": "30614829e5624d66bdb7eee6c3af255595b3c7d38282680e69b7700a9d51d629",
+      "pytest": "9.2.0",
+      "python": "3.13.18",
+      "reports": {},
+      "state_sha256": "daf6eaa9e5bbaa86cfc696cd9ffb227284c05495d8bdb9fec7d0fdf2b0707c72"
+    },
+    "identity-warm": {
+      "generator_hashes": {
+        "build_maps.py": "877ae4dfbc25902c828f6787ae5185aab42aac82989ac01cb484212ead4b2c7e",
+        "collect_profile.py": "957c536cb47307dc2d5c3c34fd20e96b9e2d7fb62dc457a046c466f886e6425c",
+        "profile_support.py": "7e7f42974a173022f29480cfd8238f193040c9d558145fe8a409a544af4e0e49"
+      },
+      "host_sha256": "a10b9c84c6469ce99f508dab22fa12f9382884944863d414de88c12f64dc8304",
+      "image": "sha256:88076b5c3c02633283124709e875d64f385436438a1ab63aac9dceac94f24a59",
+      "observations_sha256": "4ef431076cc72fd55e9476d88dc0474305ae11535f4e2c45c854947e088b5a08",
+      "pytest": "9.2.0",
+      "python": "3.13.18",
+      "reports": {
+        "('SubtestReport', 'call', 'passed')": 25440,
+        "('TestReport', 'call', 'passed')": 1620,
+        "('TestReport', 'call', 'skipped')": 1,
+        "('TestReport', 'setup', 'passed')": 1621,
+        "('TestReport', 'teardown', 'passed')": 1621
+      },
+      "state_sha256": "404cca367df6c15b278cdf32c582d918f02701069ab2c4133e73c15e39018a12"
+    },
+    "warm": {
+      "generator_hashes": {
+        "build_maps.py": "877ae4dfbc25902c828f6787ae5185aab42aac82989ac01cb484212ead4b2c7e",
+        "collect_profile.py": "97e140b90624e9b38214288deba1c2e659877405947aada258e628b71e88ac40",
+        "profile_support.py": "3a278f466ac0329b1ba356f111394ee737e3764246db635632d312fd551a94f8"
+      },
+      "host_sha256": "a10b9c84c6469ce99f508dab22fa12f9382884944863d414de88c12f64dc8304",
+      "image": "sha256:88076b5c3c02633283124709e875d64f385436438a1ab63aac9dceac94f24a59",
+      "observations_sha256": "53ef0628ebf7e8de6550da803c197412e51ada3156e346fa90db9160cbc5bc38",
+      "pytest": "9.2.0",
+      "python": "3.13.18",
+      "reports": {
+        "('SubtestReport', 'call', 'passed')": 25440,
+        "('TestReport', 'call', 'passed')": 1620,
+        "('TestReport', 'call', 'skipped')": 1,
+        "('TestReport', 'setup', 'passed')": 1621,
+        "('TestReport', 'teardown', 'passed')": 1621
+      },
+      "state_sha256": "fe01a71048e9ae59f5472382fca39a7f1894dee407f8bea5aaf4bad69c2edc77"
+    }
+  },
+  "source_commit": "eb11aec4be8cb2122afe713a4816662c3f0fb2fa",
+  "source_file_count": 184,
+  "state_guard_tools": {
+    "tools/defaults_profile/build_state_guard.py": "a4428fa5d4582736242f38ca50b50a0781fd2d1c6e2dfecd40f813d83ab99514",
+    "tools/defaults_profile/identity_v1/profile_support.py": "7e7f42974a173022f29480cfd8238f193040c9d558145fe8a409a544af4e0e49",
+    "tools/defaults_profile/static_effects.py": "3b3faba6c7818104ed7ee47c1f75c43e95ddd6af2de2ba69755e3deb3e2732d2"
+  },
+  "state_semantics": "Conservative whole-source/test call/write analysis has 1 persistent and 1620 opaque test contexts. Nonempty affected sets fall back. Thus this pinned artifact only enables zero-affected-context narrowing; it does not assert general alias/heap closure.",
+  "state_source_file_count": 250,
+  "summary": {
+    "all_observed_values_opposite_parameters": 7,
+    "function_count": 369,
+    "opaque_tests": 1620,
+    "parameter_count": 560,
+    "persistent_tests": 1
+  },
+  "superseded_collection": "Earlier v1 failed Docker permission before starting, and v2 was deliberately stopped after discovering missing metadata audit coverage. Their records are retained locally and are not merged.",
+  "test_count": 1621
+}

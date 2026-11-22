@@ -7,10 +7,10 @@ RUN python /app/fetch_source.py
 RUN python -m compileall -q /opt/sqlglot
 FROM source AS runtime
 COPY selector.py /app/selector.py
-COPY semantic_selector.py /app/semantic_selector.py
+COPY precision_selector.py default_dependencies.py shared_executor_dependencies.py /app/
 COPY tools/import_check.py /app/tools/import_check.py
 COPY tools/fork_import.py tools/comparison_proof.py tools/comparison_values.py /app/tools/
-COPY tools/context_selector.py /app/tools/context_selector.py
 COPY artifacts /app/artifacts
+RUN python -m compileall -q /app
 ENV PYTHONDONTWRITEBYTECODE=1
-CMD ["python", "/app/semantic_selector.py"]
+CMD ["python", "/app/precision_selector.py"]

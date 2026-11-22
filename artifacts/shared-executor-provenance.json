@@ -1,0 +1,34 @@
+{
+  "created_utc": "2026-11-22T02:07:03.193581+00:00",
+  "profile_sha256": "12b824ffaa4a1e6bef2123e216a656c049207d701d08ceca55e0cda15b6cdc8a",
+  "source_commit": "eb11aec4be8cb2122afe713a4816662c3f0fb2fa",
+  "immutable_image_id": "sha256:88076b5c3c02633283124709e875d64f385436438a1ab63aac9dceac94f24a59",
+  "collector_identity": {
+    "build_shared_executor_profile.py": "811c7a6b3f59e6ad0ec2b557ddf146ce82d9c5a31fdf3af62a9692af896d76ac",
+    "shared_executor_dependencies.py": "7b63044616612c9744e6131733dd2ad4bdb774ad28e4ea52524b365699a83a06"
+  },
+  "all_pristine_tests": 1621,
+  "parent_passed": 1620,
+  "parent_skipped": 1,
+  "subtests_passed": 25440,
+  "setup_and_teardown_each": 1621,
+  "unknown_factories": [],
+  "shared_pools": 1,
+  "shared_consumers": 22,
+  "local_with_factory_instances": 2,
+  "source_unchanged": true,
+  "memory_bytes": 3221225472,
+  "cpuset": "0-1",
+  "evidence": {
+    "evaluation\\shared-executor-dependencies\\run-002\\launch.json": "799b2511ea7ac07090a4fdde85e657a82f1589fa30ae8e184b42b0a04edbd7fe",
+    "evaluation\\shared-executor-dependencies\\run-002\\attach-result.json": "067fd603355b38e4ba4a5c3014b04994865fcee137b41a3e06a841b40fe1f084",
+    "evaluation\\shared-executor-dependencies\\run-002\\inspect-result.json": "d7b70d5c801e2b0c7ef01d8f65c6a886eb02f5d72b1021420534889f7359c634",
+    "evaluation\\shared-executor-dependencies\\run-002\\cleanup.json": "e0a76ec0d44723f074953e7634ee90efe29f1acf0a82408114c7f4cfae64254b",
+    "evaluation\\shared-executor-dependencies\\run-002\\container.log": "3cb8e345d2e132d1ff283d31742cf0863a22c7fac3a0a341cc5dba161175b5cf",
+    "evaluation\\shared-executor-dependencies\\run-002\\output\\source-before.json": "c18b639f0db893a1ec261bc76a7933eff34c209f9aac50daf910612b616c8964",
+    "evaluation\\shared-executor-dependencies\\run-002\\output\\source-after.json": "c18b639f0db893a1ec261bc76a7933eff34c209f9aac50daf910612b616c8964",
+    "evaluation\\shared-executor-dependencies\\run-002\\output\\events.jsonl": "bacc523befc117bae8717bfd04a0dbeb123d733f49401955f97286f48df19b62",
+    "evaluation\\shared-executor-dependencies\\run-002\\output\\shared-executor-profile.json.gz": "12b824ffaa4a1e6bef2123e216a656c049207d701d08ceca55e0cda15b6cdc8a"
+  },
+  "scope": "Unmodified baseline only; no patch or outcome labels mounted; class fixture + full suite dynamic factory inventory. Run001 successful class subset preserved as preliminary evidence."
+}
