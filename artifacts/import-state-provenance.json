@@ -1,0 +1,77 @@
+{
+  "created_utc": "2026-11-22T04:12:53.055677+00:00",
+  "complete": true,
+  "baseline_only": true,
+  "source_commit": "eb11aec4be8cb2122afe713a4816662c3f0fb2fa",
+  "source_files": 184,
+  "helper_sha256": "616105f4ebad95a1b1c48e4a601363878fb3bcae660f59eeadc6dcf61fb3428c",
+  "artifact_sha256": "e4f9ddace2e81872e82a1b5cdc6509a4f3b0c04c2c996624cd472e490621e7de",
+  "artifact_bytes": 1104131,
+  "snapshot_sha256": "b55309b544b65e7d0b8113986cfec6cc6e96b6d1120e7c74026fbf88dbd14276",
+  "image_id": "sha256:9bdfd6d6284b658dec7913f7b89a1a82c0639f780cc3ed26bbd5c6208e4be1a8",
+  "pythonhashseed": "0",
+  "resource_limits": {
+    "cpuset": "0-1",
+    "nano_cpus": 2000000000,
+    "memory": 3221225472
+  },
+  "fresh_processes": [
+    {
+      "output": "/results/baseline-1.json.gz",
+      "stable_sha256": "b55309b544b65e7d0b8113986cfec6cc6e96b6d1120e7c74026fbf88dbd14276",
+      "compressed_bytes": 1105813,
+      "uncompressed_bytes": 9275207,
+      "stats": {
+        "modules": 183,
+        "classes": 1296,
+        "fields": 24775,
+        "value_objects": 62203,
+        "unsupported_types": {},
+        "import_seconds": 0.24866897900005824,
+        "normalize_seconds": 0.9310418119998758
+      },
+      "python": "3.13.18 (main, Nov  5 2026, 07:59:38) [GCC 14.2.0]",
+      "self_cpu_seconds": 1.453413,
+      "maxrss_kib": 110900,
+      "total_wall_seconds": 1.4690042390000144
+    },
+    {
+      "output": "/results/baseline-2.json.gz",
+      "stable_sha256": "b55309b544b65e7d0b8113986cfec6cc6e96b6d1120e7c74026fbf88dbd14276",
+      "compressed_bytes": 1105812,
+      "uncompressed_bytes": 9275207,
+      "stats": {
+        "modules": 183,
+        "classes": 1296,
+        "fields": 24775,
+        "value_objects": 62203,
+        "unsupported_types": {},
+        "import_seconds": 0.16698039600009906,
+        "normalize_seconds": 0.9117120559999421
+      },
+      "python": "3.13.18 (main, Nov  5 2026, 07:59:38) [GCC 14.2.0]",
+      "self_cpu_seconds": 1.4080219999999999,
+      "maxrss_kib": 110972,
+      "total_wall_seconds": 1.3335386999999628
+    }
+  ],
+  "evidence": {
+    "evaluation\\v11\\import-state\\run-005\\output\\baseline-1.json.gz": "61d769b553c9e8d9f7c91864490eb187fb8238fca164fd35c84bd8c3d13f3a46",
+    "evaluation\\v11\\import-state\\run-005\\output\\baseline-2.json.gz": "a3b88a2549263c98566e6066645918fbfbb0352c50ecff5100a11ce310b218c7",
+    "evaluation\\v11\\import-state\\run-005\\freeze.json": "6059f75ad7a1bc4d06d12e4ee2e951b50e2f3c6b87177d11d921d99cee43aae9",
+    "evaluation\\v11\\import-state\\run-005\\inspect.json": "b8acea7f1e8c00bbf4b7b13b41b7420d59f1381bdc05c6200d83457d1a7d3a86",
+    "evaluation\\v11\\import-state\\run-005\\cleanup.json": "a7fa30efbaa02a508f0651de35cf31f99c6bf54de7916afa3f7256c64c8173ef",
+    "artifacts\\baseline-map.json.gz": "6c14c6f083287537b083a5ef82795212edc36e2e1425b6a937a526944e1a2411"
+  },
+  "normalization_contract": [
+    "Class fields are stored once at their defining class; classes.mro and own_fields support inherited reader expansion.",
+    "Derived fields, defaults, kwdefaults, closures, expression instance slots, enums and regex state contribute their values.",
+    "Declared Python function code is handled by runtime line coverage; container functions, lambdas and generated closures include code semantics.",
+    "Same-object field aliases and immediate container-member aliases are recorded without process addresses.",
+    "Type-keyed mapping iteration order is canonicalized because class hashes depend on addresses; ordinary dict insertion order is retained.",
+    "Source-recognized tuple(set-of-ordinary-types) used only as isinstance/issubclass type sets is sorted; MRO, bases and ordinary tuples retain order.",
+    "External modules/functions/classes and interpreter loader/synchronization noise use stable symbolic identity.",
+    "Unknown values are recorded on their containing fields, never a global opaque veto.",
+    "Snapshot equality is a field dependency observation, not a proof of arbitrary filesystem, network or interpreter side-effect equivalence."
+  ]
+}

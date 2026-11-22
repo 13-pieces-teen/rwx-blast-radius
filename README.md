@@ -12,9 +12,13 @@ Submission **BB-CB9A4CE9**, commit `66f69cfd271296ba6055731b1b79fe5b6a649914`, w
 
 V7 reduced the zero-miss v6 score from 248.4 to 214.4 seconds, including **33.430 seconds** less simulated CI time. V8 lowers the displayed total another **0.1 second**, with unchanged simulated CI time. The original `5887d18` scored 471.7 seconds with one missed commit and 300 penalty seconds per run. Its hypothetical penalty-free total is about 171.7 seconds, but it did not achieve that as a zero-miss entry. The current non-penalty simulated time remains 43.527 seconds above that original entry. Practice results do not guarantee unseen final performance. [Previous v7 result](docs/official-practice-v7-2026-11-21.json) · [v6 result](docs/official-practice-v6-2026-11-21.json).
 
+## Local optimization round v11
+
+The current Docker entrypoint adds **post-import state differences and concrete attribute consumers**. Module and class values are compared in fresh processes against a pristine profile from the same runtime environment. Runtime coverage, precise lambda calls and the shared-pool repair remain active. The final candidate passes 186 Linux regression methods and produces valid selections on 806 patches; 261 complete native cases and 30 supplied public cases have zero missed failures. The final public sample median is 118.645 seconds including container CPU. A directed 20-patch complete-truth comparison reduces CI plus CPU from 159.959 to 105.183 seconds. [V11 evidence and limits](docs/local-optimization-v11.md).
+
 ## Local optimization round v10
 
-The current Docker entrypoint is `precision_selector.py`, combining baseline-only default-argument observations with shared-executor failure propagation. The default rule accepts only changes with no affected observed contexts and preserves source/reflection readers; unsupported cases retain v8 selection. The executor guard adds all users of a class-shared pool when a changed transport or initialization path may break that pool. [Default dependencies](docs/default-dependencies.md) · [Shared-executor dependencies](docs/shared-executor-dependencies.md) · [Local validation](docs/local-optimization-v10.md).
+V10 introduced baseline-only default-argument observations and shared-executor failure propagation. Its default rule accepts only changes with no affected observed contexts and preserves source/reflection readers; unsupported cases retain v8 selection. The executor guard adds all users of a class-shared pool when a changed transport or initialization path may break that pool. [Default dependencies](docs/default-dependencies.md) · [Shared-executor dependencies](docs/shared-executor-dependencies.md) · [Local validation](docs/local-optimization-v10.md).
 
 ## Local optimization round v9
 
@@ -75,7 +79,7 @@ An independently generated 30-mutation batch exposed one collection-time depende
 - Import-time execution, syntax errors, unsupported changes and incomplete source information receive conservative handling. Declaration edits are checked in an isolated import process with all modified modules present together.
 - Scheduling evaluates 1–8 workers using integer milliseconds, longest-test-first balancing, and the 2-second cost of every nonempty worker.
 
-The runtime never reads sample answers or a patch-to-failure lookup table. Only `precision_selector.py`, `default_dependencies.py`, `shared_executor_dependencies.py`, the v8 `selector.py`, their runtime helpers, the baseline maps and the pinned upstream tree are copied into the image.
+The runtime never reads sample answers or a patch-to-failure lookup table. Only the selector modules, runtime helpers, baseline profiles and pinned upstream tree listed in the Dockerfile are copied into the image.
 
 The image retains SQLGlot's MIT license at `/opt/sqlglot/LICENSE`; a copy is also in [docs/SQLGLOT_LICENSE.txt](docs/SQLGLOT_LICENSE.txt).
 

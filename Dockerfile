@@ -8,9 +8,14 @@ RUN python -m compileall -q /opt/sqlglot
 FROM source AS runtime
 COPY selector.py /app/selector.py
 COPY precision_selector.py default_dependencies.py shared_executor_dependencies.py /app/
+COPY import_state_selector.py import_state_readers.py /app/
 COPY tools/import_check.py /app/tools/import_check.py
 COPY tools/fork_import.py tools/comparison_proof.py tools/comparison_values.py /app/tools/
+COPY tools/import_state.py tools/import_state_probe.py /app/tools/
+COPY tools/check_import_state_profile.py /app/tools/
 COPY artifacts /app/artifacts
 RUN python -m compileall -q /app
 ENV PYTHONDONTWRITEBYTECODE=1
+ENV PYTHONHASHSEED=0
+RUN python -B /app/tools/check_import_state_profile.py
 CMD ["python", "/app/precision_selector.py"]
