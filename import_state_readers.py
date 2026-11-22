@@ -207,9 +207,10 @@ class StateReaders:
             path,qual,name=key.rsplit(':',2);value.setdefault('kind','class');value.setdefault('path',path);value.setdefault('qualname',qual);value.setdefault('name',name)
         value.setdefault('name',value.get('attribute'));return value
 
-    def impact(self,changed_fields,before=None,after=None):
+    def impact(self,changed_fields,before=None,after=None,reader_overrides=None):
         """Return (baseline-index bitset, diagnostics); never add class-use masks."""
         before=before or {};after=after or {};fields={**before.get('fields',{}),**after.get('fields',{})}
+        reader_overrides=reader_overrides or {}
         if isinstance(changed_fields,dict):
             changed_fields=changed_fields.get('changed',changed_fields)
             if isinstance(changed_fields,dict):changed_fields=[self._record(k,v) for k,v in changed_fields.items()]
@@ -291,6 +292,16 @@ class StateReaders:
                             queue.append({'key':derived+':'+name,'kind':'class','path':derived_path,'qualname':derived_qual,
                                           'class_name':info.get('class_name',derived_qual.rsplit('.',1)[-1]),'name':name,
                                           'defined_on':owner_symbol,'change':row.get('change','value'),'_inherited_expansion':True})
+            # A default-value edit changes a function object's digest, but
+            # actual calls and metadata observations can identify its readers
+            # more precisely than generic same-name/class namespace access.
+            # Keep alias, inheritance and test-cache propagation below intact.
+            override_key=key
+            if override_key not in reader_overrides and row.get('defined_on'):
+                override_key=row['defined_on']+':'+row['name']
+            if override_key in reader_overrides:
+                value=reader_overrides[override_key]
+                routes=['function-default-call-and-metadata-readers']
             bits|=value;rows.append({'key':key,'readers':format(value,'x'),'routes':routes})
             for derived in self.names.get('test_declaration_edges',{}).get(key,[]):queue.append(self._record(derived,fields.get(derived)))
             for alias in alias_edges.get(key,[]):queue.append(self._record(alias,fields.get(alias)))

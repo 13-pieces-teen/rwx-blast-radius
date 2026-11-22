@@ -8,16 +8,20 @@ import subprocess
 
 from selector import apply_change, same_ast
 from tools.import_state_probe import ImportStateProbe
+from default_value_selector import plan_default_value
 
 
 class ImportStateMixin:
-    def __init__(self, *args, import_state_profile=None, import_state_mode='readers', **kwargs):
+    def __init__(self, *args, import_state_profile=None, import_state_mode='readers',
+                 precision_default_values=True, **kwargs):
         super().__init__(*args, **kwargs)
         self.import_state_mode = import_state_mode
         self.state_stats = Counter()
         self.state_last = None
         self._state_probe = None
         self._state_readers = None
+        self.precision_default_values = precision_default_values
+        self._default_value_sites = {}
         maps = args[1] if len(args) > 1 else kwargs['maps']
         self._state_path = Path(import_state_profile) if import_state_profile else Path(maps).parent/'import-state.json.gz'
 
@@ -30,6 +34,10 @@ class ImportStateMixin:
         self.state_last = {'reason': reason, **details}
 
     def _state_relevant(self, path, tree, nodes, touched, insertions):
+        expression = getattr(self, 'expression_plan', None)
+        if (expression is not None and expression.path == path and not insertions
+                and expression.touched == frozenset(touched)):
+            return expression.collection_touched
         collection = set(self.map.get('collection_lines', {}).get(path, ()))
         for line in touched | insertions:
             functions = [n for n in nodes if isinstance(n, (ast.FunctionDef, ast.AsyncFunctionDef))
@@ -106,7 +114,18 @@ class ImportStateMixin:
             original, tree, nodes = self.load_source(path)
             modified, touched, insertions = apply_change(original, change)
             after_tree = ast.parse(modified, filename=path)
-            if same_ast(tree, after_tree) or not self._state_relevant(path, tree, nodes, touched, insertions):
+            default_plan = None
+            if self.precision_default_values:
+                if path not in self._default_value_sites:
+                    self._default_value_sites[path] = {
+                        line for function in nodes
+                        if isinstance(function, (ast.FunctionDef, ast.AsyncFunctionDef))
+                        for value in [*function.args.defaults, *function.args.kw_defaults] if value is not None
+                        for line in range(value.lineno, value.end_lineno+1)}
+                if (touched | insertions) & self._default_value_sites[path]:
+                    default_plan = plan_default_value(self, path, tree, after_tree, touched, insertions)
+            if (default_plan is None and (same_ast(tree, after_tree)
+                    or not self._state_relevant(path, tree, nodes, touched, insertions))):
                 return baseline
             if self._state_probe is None:
                 probe = ImportStateProbe(self.source, self._state_path, self.map)
@@ -120,8 +139,15 @@ class ImportStateMixin:
             if changed and self.import_state_mode == 'equal':
                 self._state_record('state_changed', path=path, fields=len(changed))
                 return baseline
-            impact, details = self._state_readers.readers(changed, before, after)
-            runtime = self._state_runtime_bits(path, nodes, touched, insertions)
+            if default_plan is None:
+                impact, details = self._state_readers.readers(changed, before, after)
+                runtime = self._state_runtime_bits(path, nodes, touched, insertions)
+            else:
+                overrides = default_plan.reader_overrides(before, after, self._state_readers)
+                impact, details = self._state_readers.readers(changed, before, after, reader_overrides=overrides)
+                runtime = default_plan.bits
+                details = {**details, 'default_value': default_plan.diagnostics,
+                           'default_reader_override_count': len(overrides)}
             protected = self.bits('reads', path) | self.reflection_impact(path, original, modified)
             protected |= self.structural_impact(path, tree, after_tree, original, modified)
             result = runtime | impact | protected

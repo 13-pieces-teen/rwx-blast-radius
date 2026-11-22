@@ -83,6 +83,30 @@ class ImportStateReadersTests(unittest.TestCase):
         readers=fixture(sources,{'tests/test_a.py':{'5':'1'}},ids=['tests/test_a.py::Case::test_a'])
         self.assertEqual(readers.impact(['sqlglot/m.py:Base:FLAG'])[0],1)
 
+    def test_default_reader_override_keeps_test_declaration_cache(self):
+        sources={'sqlglot/m.py':'def f(flag=True):\n    return flag\n',
+                 'tests/test_a.py':'from sqlglot.m import f\nCACHED=f.__defaults__[0]\ndef test_a():\n    assert CACHED\n'}
+        readers=fixture(sources,{'tests/test_a.py':{'4':'4'}})
+        key='sqlglot/m.py::f'
+        readers.names['readers'][key]='7'
+        bits,details=readers.impact([key],reader_overrides={key:1})
+        self.assertEqual(bits,5)
+        self.assertIn('tests/test_a.py::CACHED',[r['key'] for r in details['reader_fields']])
+
+    def test_default_reader_override_follows_inherited_owner(self):
+        sources={'sqlglot/m.py':'class Base:\n    def f(self,flag=True):\n        return flag\nclass Child(Base): pass\n'}
+        base='sqlglot/m.py:Base';child='sqlglot/m.py:Child';key=base+':f'
+        readers=fixture(sources,{}, {key:'7',child+':f':'7'})
+        snapshot={'fields':{key:{'defined_on':base}},'classes':{
+            base:cls(base,[base],['f']),child:cls(child,[child,base],[])}}
+        self.assertEqual(readers.impact([key],snapshot,snapshot,reader_overrides={key:1})[0],1)
+
+    def test_override_does_not_remove_other_derived_value(self):
+        sources={'sqlglot/m.py':'def f(flag=True):\n    return flag\nCACHED=f()\ndef use():\n    return CACHED\n'}
+        readers=fixture(sources,{'sqlglot/m.py':{'5':'4'}})
+        self.assertEqual(readers.impact(['sqlglot/m.py::f','sqlglot/m.py::CACHED'],
+                                       reader_overrides={'sqlglot/m.py::f':1})[0],5)
+
 
 if __name__ == '__main__':
     unittest.main()

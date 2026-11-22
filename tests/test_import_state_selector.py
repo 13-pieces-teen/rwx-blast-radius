@@ -8,6 +8,7 @@ import unittest
 from unittest.mock import Mock
 
 from import_state_selector import ImportStateMixin
+from import_state_readers import StateReaders, build_name_profile
 from selector import Selector
 
 
@@ -89,3 +90,24 @@ class ImportStateSelectionTests(unittest.TestCase):
         selected = selector.select(self.patch(source, source.replace('x + 1', 'x + 2')))
         self.assertEqual([t['number'] for t in selected], [0])
         self.assertEqual(selector.state_last['reason'], 'existing_lambda_call_readers')
+
+    def test_default_call_readers_survive_outer_state_layer_and_keep_derived_value(self):
+        source = ('class C:\n    def f(self, flag=True):\n        return flag\n'
+                  'CACHED=C().f()\ndef cached():\n    return CACHED\n')
+        selector = self.candidate(source, collection=[1, 2, 3, 4], lines={'3':'3','6':'4'})
+        selector.default_dependencies = {'functions': {'sqlglot/m.py:2:C.f': {
+            'metadata_readers':'0','metadata_collection':False,'identity_opaque':False,
+            'parameters':{'flag':{'kind':'positional','default':True,'seen':'3','possible':'2','opaque':'0'}}}}}
+        names = build_name_profile({'sqlglot/m.py':source}, selector.map)
+        selector._state_readers = StateReaders(selector,names)
+        key='sqlglot/m.py:C:f'; derived='sqlglot/m.py::CACHED'
+        before={'fields':{key:{'value_kind':'builtins.function','defined_on':'sqlglot/m.py:C'},
+                          derived:{'value_kind':'builtins.bool'}}, 'aliases':[]}
+        selector._state_probe=Mock()
+        selector._state_probe.compare.return_value=(
+            [{'key':key,'kind':'class','path':'sqlglot/m.py','qualname':'C','name':'f','defined_on':'sqlglot/m.py:C'},
+             {'key':derived,'kind':'module','path':'sqlglot/m.py','name':'CACHED'}],before,before)
+        selected=selector.select(self.patch(source,source.replace('flag=True','flag=False')))
+        self.assertEqual([t['number'] for t in selected],[1,2])
+        self.assertEqual(selector.state_last['default_value']['binding_reason'],'observed_bool_bindings')
+        self.assertEqual(selector.state_last['default_reader_override_count'],1)

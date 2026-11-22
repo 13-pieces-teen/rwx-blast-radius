@@ -9,6 +9,7 @@ FROM source AS runtime
 COPY selector.py /app/selector.py
 COPY precision_selector.py default_dependencies.py shared_executor_dependencies.py /app/
 COPY import_state_selector.py import_state_readers.py /app/
+COPY default_value_selector.py expression_dependencies.py /app/
 COPY tools/import_check.py /app/tools/import_check.py
 COPY tools/fork_import.py tools/comparison_proof.py tools/comparison_values.py /app/tools/
 COPY tools/import_state.py tools/import_state_probe.py /app/tools/

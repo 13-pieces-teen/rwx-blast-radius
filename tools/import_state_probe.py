@@ -14,17 +14,48 @@ import threading
 import time
 
 
+def pack_snapshot(before, after):
+    """Lossless transport delta; the child still observes the complete state."""
+    from tools.import_state import diff
+    changed = diff(before, after)['changed']
+    # Metadata can change without changing a value digest. Preserve the exact
+    # records, not only the semantic diff used by the dependency selector.
+    fields = {key: value for key, value in after['fields'].items()
+              if key not in before['fields'] or value != before['fields'][key]}
+    return {'transport': 'snapshot-delta-v1', 'changed': changed,
+            'fields': fields, 'removed_fields': sorted(before['fields'].keys() - after['fields'].keys()),
+            'top': {key: value for key, value in after.items()
+                    if key != 'fields' and (key not in before or value != before[key])},
+            'removed_top': sorted(before.keys() - after.keys())}
+
+
+def unpack_snapshot(before, packet):
+    if packet.get('transport') != 'snapshot-delta-v1':
+        raise ValueError('unknown import-state transport')
+    after = dict(before)
+    for key in packet['removed_top']:
+        after.pop(key, None)
+    after.update(packet['top'])
+    after['fields'] = dict(before['fields'])
+    for key in packet['removed_fields']:
+        after['fields'].pop(key, None)
+    after['fields'].update(packet['fields'])
+    return after
+
+
 def _capture(request, output):
     from tools.import_state import snapshot
     # Mutated code may print; only our JSON file belongs to the protocol.
     with open(os.devnull, 'w') as sink, contextlib.redirect_stdout(sink), contextlib.redirect_stderr(sink):
         result = snapshot(request['source'], request['overrides'], request['imports'],
                           normalization_policy=request.get('normalization_policy'))
+    if 'baseline' in request:
+        result = pack_snapshot(request['baseline'], result)
     Path(output).write_text(json.dumps(result, separators=(',', ':')), encoding='utf-8')
 
 
 def run_snapshot(request, timeout=8):
-    """Return a complete fresh import snapshot, or raise on an import failure."""
+    """Return a full snapshot or lossless delta; raise on an import failure."""
     descriptor, output = tempfile.mkstemp(prefix='import-state-', suffix='.json')
     os.close(descriptor)
     try:
@@ -90,11 +121,13 @@ class ImportStateProbe:
         self.imports = self.profile['imports']
 
     def compare(self, overrides):
-        after = run_snapshot({'source': self.source, 'overrides': overrides, 'imports': self.imports,
-                              'normalization_policy': self.baseline.get('normalization_policy')})
-        from tools.import_state import diff
-        changed = diff(self.baseline, after)['changed']
-        return changed, self.baseline, after
+        # On Linux the baseline is inherited copy-on-write. Only changed fields
+        # cross the process boundary instead of serializing the full ~9 MB state.
+        packet = run_snapshot({'source': self.source, 'overrides': overrides, 'imports': self.imports,
+                               'baseline': self.baseline,
+                               'normalization_policy': self.baseline.get('normalization_policy')})
+        after = unpack_snapshot(self.baseline, packet)
+        return packet['changed'], self.baseline, after
 
 
 if __name__ == '__main__':

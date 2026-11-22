@@ -14,9 +14,13 @@ Submission **BB-CB9A4CE9**, commit `66f69cfd271296ba6055731b1b79fe5b6a649914`, w
 
 V7 reduced the zero-miss v6 score from 248.4 to 214.4 seconds, including **33.430 seconds** less simulated CI time. V8 lowered the displayed total another **0.1 second**, with unchanged simulated CI time. The original `5887d18` scored 471.7 seconds with one missed commit and 300 penalty seconds per run. Its hypothetical penalty-free total is about 171.7 seconds, but it did not achieve that as a zero-miss entry. Practice results do not guarantee unseen final performance. [Previous v7 result](docs/official-practice-v7-2026-11-21.json) · [v6 result](docs/official-practice-v6-2026-11-21.json).
 
+## Local optimization round v12
+
+The current entrypoint composes default-value call/metadata dependencies with the v11 state difference, and narrows multiline statement coverage to the changed expression's actual bytecode execution anchor. Complete snapshots use lossless delta transport. All 219 Linux regression methods are covered, including the existing actual-execution subcases. On 806 patches, 55 selections change and simulated CI falls by 296.461 seconds relative to v11; all 291 complete-label cases retain every failure. Public30's three-run CPU-inclusive median is 118.211 seconds. [V12 mechanism and evidence](docs/local-optimization-v12.md).
+
 ## Local optimization round v11
 
-The current Docker entrypoint adds **post-import state differences and concrete attribute consumers**. Module and class values are compared in fresh processes against a pristine profile from the same runtime environment. Runtime coverage, precise lambda calls and the shared-pool repair remain active. The final candidate passes 186 Linux regression methods and produces valid selections on 806 patches; 261 complete native cases and 30 supplied public cases have zero missed failures. The final public sample median is 118.645 seconds including container CPU. A directed 20-patch complete-truth comparison reduces CI plus CPU from 159.959 to 105.183 seconds. [V11 evidence and limits](docs/local-optimization-v11.md).
+V11 added **post-import state differences and concrete attribute consumers**. Module and class values are compared in fresh processes against a pristine profile from the same runtime environment. Runtime coverage, precise lambda calls and the shared-pool repair remain active. Its final candidate passes 186 Linux regression methods and produces valid selections on 806 patches; 261 complete native cases and 30 supplied public cases have zero missed failures. Its final public sample median is 118.645 seconds including container CPU. A directed 20-patch complete-truth comparison reduces CI plus CPU from 159.959 to 105.183 seconds. [V11 evidence and limits](docs/local-optimization-v11.md).
 
 ## Local optimization round v10
 
