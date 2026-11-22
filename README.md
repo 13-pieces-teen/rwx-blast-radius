@@ -4,13 +4,15 @@ An entry for the RWX Buildathon track. For each independent SQLGlot patch, the s
 
 ## Official practice result
 
-Latest experiment **v10**, submission **BB-8DE3F22C**, commit `2df519a55f0a89b2790086ea2b66018afd9b763b`, scored **214.6 seconds** with zero missed commits in all three runs. Simulated time remains 211.977 seconds; CPU is 2.62 / 2.60 / 2.63 seconds. It is **0.3 seconds slower** than v8, which remains the best and automatically entered final submission. [Official v10 result](docs/official-practice-v10-2026-11-22.json).
+Latest experiment **v11**, submission **BB-50143916**, commit `7261e88b8ff80fb7faefca472c79596e08c9387e`, scored **189.3 seconds** with zero missed commits in all three runs. Simulated time is 178.068 seconds; CPU is 11.20 / 11.46 / 10.92 seconds. It improves the previous best by **25.0 seconds (11.7%)** and is automatically entered in the final as the team's best score. [Official v11 result](docs/official-practice-v11-2026-11-22.json).
+
+Previous experiment **v10**, submission **BB-8DE3F22C**, commit `2df519a55f0a89b2790086ea2b66018afd9b763b`, scored **214.6 seconds** with zero missed commits in all three runs. Simulated time was 211.977 seconds; CPU was 2.62 / 2.60 / 2.63 seconds. It was **0.3 seconds slower** than v8. [Official v10 result](docs/official-practice-v10-2026-11-22.json).
 
 Previous experiment **v9**, submission **BB-01EBCC2B**, commit `3e6caf7243e6ad4370fca9359447174687804e84`, scored **218.3 seconds** with zero missed commits in all three runs. Simulated time fell only 0.373 seconds to 211.604, while CPU rose to 6.66 / 6.65 / 7.10 seconds. It is **4.0 seconds slower** than v8. [Official v9 result](docs/official-practice-v9-2026-11-21.json).
 
-Submission **BB-CB9A4CE9**, commit `66f69cfd271296ba6055731b1b79fe5b6a649914`, was scored on 2026-11-21: **214.3 seconds**. All three runs missed **zero commits**; each had 211.977 simulated seconds and 2.36, 2.34 and 2.37 CPU seconds. It is the team's current best and selected final entry. [Official v8 result](docs/official-practice-v8-2026-11-21.json).
+Submission **BB-CB9A4CE9**, commit `66f69cfd271296ba6055731b1b79fe5b6a649914`, was scored on 2026-11-21: **214.3 seconds**. All three runs missed **zero commits**; each had 211.977 simulated seconds and 2.36, 2.34 and 2.37 CPU seconds. It was the team's best until v11. [Official v8 result](docs/official-practice-v8-2026-11-21.json).
 
-V7 reduced the zero-miss v6 score from 248.4 to 214.4 seconds, including **33.430 seconds** less simulated CI time. V8 lowers the displayed total another **0.1 second**, with unchanged simulated CI time. The original `5887d18` scored 471.7 seconds with one missed commit and 300 penalty seconds per run. Its hypothetical penalty-free total is about 171.7 seconds, but it did not achieve that as a zero-miss entry. The current non-penalty simulated time remains 43.527 seconds above that original entry. Practice results do not guarantee unseen final performance. [Previous v7 result](docs/official-practice-v7-2026-11-21.json) · [v6 result](docs/official-practice-v6-2026-11-21.json).
+V7 reduced the zero-miss v6 score from 248.4 to 214.4 seconds, including **33.430 seconds** less simulated CI time. V8 lowered the displayed total another **0.1 second**, with unchanged simulated CI time. The original `5887d18` scored 471.7 seconds with one missed commit and 300 penalty seconds per run. Its hypothetical penalty-free total is about 171.7 seconds, but it did not achieve that as a zero-miss entry. Practice results do not guarantee unseen final performance. [Previous v7 result](docs/official-practice-v7-2026-11-21.json) · [v6 result](docs/official-practice-v6-2026-11-21.json).
 
 ## Local optimization round v11
 

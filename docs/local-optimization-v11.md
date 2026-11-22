@@ -6,6 +6,12 @@ The selector retains runtime line/condition coverage, source readers, reflection
 
 The production image is `sha256:3a370f17d56ad9d990c62648a40f42377a8e779ce6e98bf1aba501d34210c2b8`. A build-time pristine import verifies zero differences against the packaged snapshot. The final Linux regression run passed **186 test methods**, including the existing actual-execution subcases.
 
+## Official practice result
+
+Commit `7261e88b8ff80fb7faefca472c79596e08c9387e`, receipt **BB-50143916**, scored **189.3 seconds** on 2026-11-22. All three runs missed zero commits, with simulated CI of 178.068 seconds and container CPU of 11.20 / 11.46 / 10.92 seconds. The page automatically entered this submission in the final as the team's best score.
+
+Against the previous best v8 score of 214.3 seconds, the displayed improvement is **25.0 seconds (11.7%)**. Simulated CI falls by 33.909 seconds while the displayed median CPU rises by 8.84 seconds. The two main mechanisms therefore provide a net official practice improvement after paying their analysis cost. This is not a measurement of the unseen final batch. [Official receipt and measurements](official-practice-v11-2026-11-22.json).
+
 ## Directed integration batch
 
 Twenty existing patches with complete native truth were selected by syntax, source location and a fixed hash order, without filtering on failures or estimated savings. All original inputs and prior unsuccessful candidate runs are retained locally.
@@ -42,4 +48,4 @@ The aligned first candidate exposed two precision regressions, both corrected be
 
 Implementation boundaries and profile provenance are documented in [import state](import-state.md) and [field readers](import-state-readers.md). Native mutation outcomes validate the fixed-suite behavior empirically; the snapshot is not a proof about arbitrary interpreter or external side effects.
 
-Local records: `evaluation/v11/runs/fast20-off-control`, `fast20-final`, and the full validation under `readers-806-final`. Complete batches are split into deterministic groups of at most 40 patches to match practice-batch scale. Container CPU sums include repeated startup per group and must not be presented as directly paired with older unpartitioned CPU measurements. Official scoring is recorded separately after submission.
+Local records: `evaluation/v11/runs/fast20-off-control`, `fast20-final`, and the full validation under `readers-806-final`; the consolidated report is `evaluation/v11/verification/FINAL-VERIFICATION.json`. Complete batches are split into deterministic groups of at most 40 patches to match practice-batch scale. Container CPU sums include repeated startup per group and must not be presented as directly paired with older unpartitioned CPU measurements. Official scoring is recorded separately above.

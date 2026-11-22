@@ -1,0 +1,30 @@
+{
+  "observed_date": "2026-11-22",
+  "observed_at": "2026-11-22T12:39:40+08:00",
+  "timezone": "Asia/Shanghai",
+  "track": "RWX - Blast Radius",
+  "team": "13",
+  "submission_id": "BB-50143916",
+  "status": "Scored",
+  "repository": "https://github.com/13-pieces-teen/rwx-blast-radius",
+  "commit": "7261e88b8ff80fb7faefca472c79596e08c9387e",
+  "policy": "post-import state differences and concrete attribute readers, with runtime coverage and shared-executor propagation",
+  "official_score_seconds": 189.3,
+  "runs_as_displayed": [
+    {"run": 1, "simulated_seconds": 178.068, "cpu_seconds": 11.20, "missed_commits": 0},
+    {"run": 2, "simulated_seconds": 178.068, "cpu_seconds": 11.46, "missed_commits": 0},
+    {"run": 3, "simulated_seconds": 178.068, "cpu_seconds": 10.92, "missed_commits": 0}
+  ],
+  "penalty_per_missed_commit_seconds": 300,
+  "previous_best_submission": "BB-CB9A4CE9",
+  "previous_best_commit": "66f69cfd271296ba6055731b1b79fe5b6a649914",
+  "previous_best_score_seconds": 214.3,
+  "displayed_score_reduction_seconds": 25.0,
+  "nonpenalty_simulated_reduction_seconds": 33.909,
+  "median_cpu_increase_from_displayed_values_seconds": 8.84,
+  "final_selection_as_observed": "V11 is entered in the final automatically as the team's best score",
+  "source": "https://www.joinbuilders.org/buildathon/tracks/blast-radius",
+  "local_validation": "evaluation/v11/verification/FINAL-VERIFICATION.json",
+  "local_screenshot": "evaluation/v11/official-score-detail.jpg",
+  "limits": "Official practice result, not the unseen final. Hidden per-patch selections and costs remain undisclosed. Displayed CPU and total scores are rounded. Local validation has 261 complete native cases plus 30 supplied public cases; 515 additional cases lack complete truth and are not counted as passing."
+}
