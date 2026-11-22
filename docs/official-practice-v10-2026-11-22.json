@@ -1,0 +1,29 @@
+{
+  "observed_date": "2026-11-22",
+  "timezone": "Asia/Shanghai",
+  "track": "RWX - Blast Radius",
+  "team": "13",
+  "submission_id": "BB-8DE3F22C",
+  "status": "Scored",
+  "repository": "https://github.com/13-pieces-teen/rwx-blast-radius",
+  "commit": "2df519a55f0a89b2790086ea2b66018afd9b763b",
+  "policy": "strict default dependencies plus shared-executor propagation",
+  "official_score_seconds": 214.6,
+  "runs_as_displayed": [
+    {"run": 1, "simulated_seconds": 211.977, "cpu_seconds": 2.62, "missed_commits": 0},
+    {"run": 2, "simulated_seconds": 211.977, "cpu_seconds": 2.60, "missed_commits": 0},
+    {"run": 3, "simulated_seconds": 211.977, "cpu_seconds": 2.63, "missed_commits": 0}
+  ],
+  "penalty_per_missed_commit_seconds": 300,
+  "previous_best_submission": "BB-CB9A4CE9",
+  "previous_best_commit": "66f69cfd271296ba6055731b1b79fe5b6a649914",
+  "previous_best_score_seconds": 214.3,
+  "displayed_score_regression_seconds": 0.3,
+  "nonpenalty_simulated_reduction_seconds": 0,
+  "median_cpu_increase_from_displayed_values_seconds": 0.26,
+  "final_selection_as_observed": "V8 remains entered in the final as the best score; v10 displays Pick as our final entry and was not manually selected",
+  "source": "https://www.joinbuilders.org/buildathon/tracks/blast-radius",
+  "local_validation": "evaluation/v10/runs/candidate-first",
+  "local_screenshot": "evaluation/v10/official-score-detail.jpg",
+  "limits": "Official practice result, not the unseen final. Hidden per-patch selections and costs remain undisclosed. Displayed CPU and total scores are rounded. The broader local precision gains did not reduce this practice batch's simulated cost."
+}
