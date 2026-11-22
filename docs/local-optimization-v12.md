@@ -2,6 +2,12 @@
 
 This experiment starts from v11's submitted 189.3-second version. It targets the remaining default-argument and multiline-condition over-selection identified in the earlier diagnosis. Production selection uses pinned source, baseline coverage and parameter observations; no mutation IDs, expected failures or patch-to-answer tables enter the image.
 
+## Official practice result
+
+Commit `fec3d59600d5d8cd8f4247e4eade2b90a7d7d845`, receipt **BB-9A4FE89D**, scored **188.8 seconds** on 2026-11-22 and is automatically entered in the final as the team's best score. All three runs missed zero commits. Each run had 178.068 simulated seconds, with CPU of 10.85 / 10.54 / 10.70 seconds. [Official result](official-practice-v12-2026-11-22.json).
+
+This is only **0.5 seconds better than v11**. The official simulated total is unchanged, despite the local 296.461-second reduction across the 806 cases. The observed improvement is the displayed CPU median difference. Hidden per-patch outputs are unavailable, so this does not establish identical selections or isolate which inputs account for the aggregate. It also does not isolate the transport change's causal CPU benefit. The experiment validates broader local selection precision but does not demonstrate the intended large official reduction.
+
 ## Default-value dependencies
 
 The old default rule rejected every nonempty affected set through its persistent-state guard. In addition, v11's outer import-state layer could replace its result with whole-function coverage and generic readers of the changed function object. The new path composes these analyses explicitly.

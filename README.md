@@ -4,7 +4,9 @@ An entry for the RWX Buildathon track. For each independent SQLGlot patch, the s
 
 ## Official practice result
 
-Latest experiment **v11**, submission **BB-50143916**, commit `7261e88b8ff80fb7faefca472c79596e08c9387e`, scored **189.3 seconds** with zero missed commits in all three runs. Simulated time is 178.068 seconds; CPU is 11.20 / 11.46 / 10.92 seconds. It improves the previous best by **25.0 seconds (11.7%)** and is automatically entered in the final as the team's best score. [Official v11 result](docs/official-practice-v11-2026-11-22.json).
+Latest experiment **v12**, submission **BB-9A4FE89D**, commit `fec3d59600d5d8cd8f4247e4eade2b90a7d7d845`, scored **188.8 seconds** with zero missed commits in all three runs. Simulated time remains 178.068 seconds; CPU is 10.85 / 10.54 / 10.70 seconds. It improves the previous best by **0.5 seconds** and is automatically entered in the final. The substantial local precision gains did not reduce this official batch's simulated total. [Official v12 result](docs/official-practice-v12-2026-11-22.json).
+
+Previous experiment **v11**, submission **BB-50143916**, commit `7261e88b8ff80fb7faefca472c79596e08c9387e`, scored **189.3 seconds** with zero missed commits in all three runs. Simulated time was 178.068 seconds; CPU was 11.20 / 11.46 / 10.92 seconds. It improved v8 by **25.0 seconds (11.7%)** and was the team's best until v12. [Official v11 result](docs/official-practice-v11-2026-11-22.json).
 
 Previous experiment **v10**, submission **BB-8DE3F22C**, commit `2df519a55f0a89b2790086ea2b66018afd9b763b`, scored **214.6 seconds** with zero missed commits in all three runs. Simulated time was 211.977 seconds; CPU was 2.62 / 2.60 / 2.63 seconds. It was **0.3 seconds slower** than v8. [Official v10 result](docs/official-practice-v10-2026-11-22.json).
 

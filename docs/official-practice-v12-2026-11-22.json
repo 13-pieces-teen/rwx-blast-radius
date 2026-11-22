@@ -1,0 +1,31 @@
+{
+  "observed_date": "2026-11-22",
+  "observed_at": "2026-11-22T15:19:28+08:00",
+  "timezone": "Asia/Shanghai",
+  "track": "RWX - Blast Radius",
+  "team": "13",
+  "submission_id": "BB-9A4FE89D",
+  "status": "Scored",
+  "repository": "https://github.com/13-pieces-teen/rwx-blast-radius",
+  "commit": "fec3d59600d5d8cd8f4247e4eade2b90a7d7d845",
+  "policy": "default-value call and metadata dependencies, bytecode-anchored expression coverage, and lossless snapshot delta transport on v11 import-state readers",
+  "official_score_seconds": 188.8,
+  "runs_as_displayed": [
+    {"run": 1, "simulated_seconds": 178.068, "cpu_seconds": 10.85, "missed_commits": 0},
+    {"run": 2, "simulated_seconds": 178.068, "cpu_seconds": 10.54, "missed_commits": 0},
+    {"run": 3, "simulated_seconds": 178.068, "cpu_seconds": 10.70, "missed_commits": 0}
+  ],
+  "penalty_per_missed_commit_seconds": 300,
+  "previous_best_submission": "BB-50143916",
+  "previous_best_commit": "7261e88b8ff80fb7faefca472c79596e08c9387e",
+  "previous_best_score_seconds": 189.3,
+  "displayed_score_reduction_seconds": 0.5,
+  "nonpenalty_simulated_reduction_seconds": 0,
+  "median_cpu_reduction_from_displayed_values_seconds": 0.5,
+  "final_selection_as_observed": "V12 is entered in the final automatically as the team's best score",
+  "source": "https://www.joinbuilders.org/buildathon/tracks/blast-radius",
+  "local_validation": "evaluation/v12/verification/VERIFICATION-RESULTS.json",
+  "additional_native_truth": "evaluation/v12/verification/m0314-truth-result.json",
+  "local_screenshot": "evaluation/v12/official-score-detail.jpg",
+  "limits": "Official practice result, not the unseen final. The local 296.461-second CI reduction did not reduce this official batch's simulated total. Hidden per-patch selections remain undisclosed, so unchanged aggregate cost does not prove unchanged selections. Displayed CPU and total scores are rounded; the 0.5-second CPU difference is an observed result, not isolated causal attribution to snapshot transport. Original local validation has 291 complete cases; the additional native m0314 observation increases that to 292. Four newly narrowed cases remain without complete truth."
+}
